@@ -1,0 +1,53 @@
+<app-menu></app-menu>
+<div class="container d-flex justify-content-center align-items-center mt-5" style="min-height: 100vh;">
+  <div class="card p-5 shadow-lg border-0" style="max-width: 500px; width: 100%; border-radius: 20px; background: linear-gradient(135deg, #ffffff, #e3f2fd); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+    <h3 class="text-center mb-4 text-primary fw-bold" style="letter-spacing: 1px;">User Registration</h3>
+    
+    <form>
+      <div class="mb-3">
+        <label for="username" class="form-label fw-bold">Username</label>
+        <div class="input-group">
+          <span class="input-group-text bg-gradient-primary text-white" style="border-radius: 10px 0 0 10px;"><i class="bi bi-person-fill"></i></span>
+          <input type="text" name="username" class="form-control shadow-sm" [(ngModel)]="username" placeholder="Enter username" style="border-radius: 0 10px 10px 0;">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="password" class="form-label fw-bold">Password</label>
+        <div class="input-group">
+          <span class="input-group-text bg-gradient-primary text-white" style="border-radius: 10px 0 0 10px;"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" name="password" class="form-control shadow-sm" [(ngModel)]="password" placeholder="Enter password" style="border-radius: 0 10px 10px 0;">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label fw-bold">First Name</label>
+        <input type="text" name="firstName" class="form-control shadow-sm" [(ngModel)]="firstName" placeholder="Enter first name" style="border-radius: 10px;">
+      </div>
+
+      <div class="mb-3">
+        <label for="lastName" class="form-label fw-bold">Last Name</label>
+        <input type="text" name="lastName" class="form-control shadow-sm" [(ngModel)]="lastName" placeholder="Enter last name" style="border-radius: 10px;">
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-bold">Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-gradient-primary text-white" style="border-radius: 10px 0 0 10px;"><i class="bi bi-envelope-fill"></i></span>
+          <input type="email" name="email" class="form-control shadow-sm" [(ngModel)]="email" placeholder="Enter email" style="border-radius: 0 10px 10px 0;">
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label for="role" class="form-label fw-bold">Role</label>
+        <input type="text" name="role" class="form-control shadow-sm" [(ngModel)]="role" placeholder="Enter role" style="border-radius: 10px;">
+      </div>
+
+      <div class="text-center">
+        <button (click)="adduser()" class="btn btn-primary w-100 fw-bold py-2 shadow" style="border-radius: 30px; transition: 0.3s; background: linear-gradient(135deg, #007bff, #0056b3); border: none;">
+          <i class="bi bi-person-plus"></i> Add User
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<app-menu></app-menu>
+
+<div class="container d-flex justify-content-center align-items-center mt-5" style="min-height: 100vh;">
+  <div class="card p-5 shadow-lg border-0" style="max-width: 600px; width: 100%; border-radius: 20px; background: linear-gradient(135deg, #ffffff, #e3f2fd); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+    <h3 class="text-center mb-4 text-primary fw-bold" style="letter-spacing: 1px; font-size: 24px;">Update User</h3>
+    
+    <form>
+      <div class="mb-3 position-relative">
+        <label for="username" class="form-label fw-bold">Username</label>
+        <div class="input-group">
+          <span class="input-group-text bg-gradient-primary text-white"><i class="bi bi-person-fill"></i></span>
+          <input type="text" name="username" class="form-control shadow-sm" [(ngModel)]="username" readonly style="border-radius: 10px; background-color: #f8f9fa;">
+        </div>
+      </div>
+      
+      <div class="mb-3 position-relative">
+        <label for="password" class="form-label fw-bold">Password</label>
+        <div class="input-group">
+          <span class="input-group-text bg-gradient-primary text-white"><i class="bi bi-lock-fill"></i></span>
+          <input type="password" name="password" class="form-control shadow-sm" [(ngModel)]="password" style="border-radius: 10px;">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="firstName" class="form-label fw-bold">First Name</label>
+        <input type="text" name="firstName" class="form-control shadow-sm" [(ngModel)]="firstName" style="border-radius: 10px;">
+      </div>
+
+      <div class="mb-3">
+        <label for="lastName" class="form-label fw-bold">Last Name</label>
+        <input type="text" name="lastName" class="form-control shadow-sm" [(ngModel)]="lastName" style="border-radius: 10px;">
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label fw-bold">Email</label>
+        <div class="input-group">
+          <span class="input-group-text bg-gradient-primary text-white"><i class="bi bi-envelope-fill"></i></span>
+          <input type="email" name="email" class="form-control shadow-sm" [(ngModel)]="email" style="border-radius: 10px;">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="role" class="form-label fw-bold">Role</label>
+        <select name="role" class="form-control shadow-sm" [(ngModel)]="role" style="border-radius: 10px;">
+          <option value="Admin">Admin</option>
+          <option value="User">User</option>
+          <option value="Manager">Manager</option>
+        </select>
+      </div>
+
+      <div class="text-center">
+        <button (click)="updateUser()" class="btn btn-primary w-100 fw-bold py-2 shadow" style="border-radius: 30px; transition: 0.3s; background: linear-gradient(135deg, #007bff, #0056b3); border: none; font-size: 18px;">
+          <i class="bi bi-save"></i> Update User
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

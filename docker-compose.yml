@@ -23,7 +23,7 @@ services:
     image: shubhamghongade/samstrackapi
     container_name: java-container
     ports:
-      - "8081:8081"
+      - "9090:9090"
     restart: always
     depends_on:
       - mysql-db

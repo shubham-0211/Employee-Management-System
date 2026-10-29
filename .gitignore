@@ -1,0 +1,41 @@
+# Java and Maven
+**/target/
+*.class
+*.jar
+*.war
+hs_err_pid*
+
+# Angular and Node.js
+**/node_modules/
+**/dist/
+**/.angular/
+npm-debug.log*
+.npm/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+application-local.properties
+application-secret.properties
+secrets/
+*.pem
+*.key
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+.classpath
+.project
+.settings/
+
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+tmp/
+temp/

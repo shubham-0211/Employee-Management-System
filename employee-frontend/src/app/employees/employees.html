@@ -1,0 +1,84 @@
+<section class="employees-page">
+  <div class="page-heading">
+    <div>
+      <h2>Employees</h2>
+      <p>View and manage your organization's employee records.</p>
+    </div>
+
+    <button type="button" class="primary-button">
+      + Add Employee
+    </button>
+  </div>
+
+  <div class="employee-summary">
+    <div>
+      <span class="summary-label">Employee Directory</span>
+      <h3>All Employees</h3>
+      <p>
+        {{ employees.length }} employee(s) found
+      </p>
+    </div>
+
+    <div class="summary-icon">EM</div>
+  </div>
+
+  <div class="content-card">
+    <div class="table-toolbar">
+      <div>
+        <h3>Employee List</h3>
+        <p>Employee information retrieved from the backend API.</p>
+      </div>
+    </div>
+
+    @if (isLoading) {
+      <div class="empty-state">Loading employees...</div>
+    } @else if (errorMessage) {
+      <div class="error-state">{{ errorMessage }}</div>
+    } @else {
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Employee</th>
+              <th>Employee ID</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Job Title</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (employee of employees; track employee.id) {
+              <tr>
+                <td>
+                  <div class="employee-name">
+                    {{ employee.firstName }} {{ employee.lastName }}
+                  </div>
+                </td>
+                <td>{{ employee.employeeCode }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.department || '—' }}</td>
+                <td>{{ employee.jobTitle || '—' }}</td>
+                <td>
+                  <span
+                    class="status-badge"
+                    [class.inactive]="employee.employmentStatus !== 'ACTIVE'"
+                  >
+                    {{ employee.employmentStatus }}
+                  </span>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="empty-state">
+                  No employee records found.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</section>

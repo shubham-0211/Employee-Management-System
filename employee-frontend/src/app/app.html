@@ -1,0 +1,47 @@
+<div class="app-shell">
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">EM</div>
+      <div class="brand-text">
+        <h1>Employee Management</h1>
+        <p>Workforce Administration Portal</p>
+      </div>
+    </div>
+
+    <div class="header-info">
+      <span class="status-dot"></span>
+      <span>System Online</span>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <p class="sidebar-heading">MAIN MENU</p>
+
+      <nav class="navigation">
+        <a
+          routerLink="/"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span class="nav-icon">▦</span>
+          Dashboard
+        </a>
+
+        <a routerLink="/employees" routerLinkActive="active">
+          <span class="nav-icon">♙</span>
+          Employees
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <p>Employee Management System</p>
+        <span>Version 0.1.0</span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<div class="employee-list-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Employee Directory</h1>
+      <p>Manage and view all employees in your organization.</p>
+    </div>
+
+    <a routerLink="/employees/new" class="add-button">
+      + Add Employee
+    </a>
+  </div>
+
+  <div class="employee-summary">
+    <div class="summary-card">
+      <span>Total Employees</span>
+      <h2>{{ employees.length }}</h2>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-message">
+    Loading employees...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+    <button type="button" (click)="loadEmployees()">
+      Retry
+    </button>
+  </div>
+
+  <div
+    *ngIf="!isLoading && !errorMessage && employees.length === 0"
+    class="empty-message"
+  >
+    <h3>No employees found</h3>
+    <p>Start by adding your first employee.</p>
+    <a routerLink="/employees/new" class="add-button">
+      Add Employee
+    </a>
+  </div>
+
+  <div
+    *ngIf="!isLoading && !errorMessage && employees.length > 0"
+    class="table-container"
+  >
+    <table>
+      <thead>
+        <tr>
+          <th>Employee Code</th>
+          <th>Employee Name</th>
+          <th>Email</th>
+          <th>Department</th>
+          <th>Job Title</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let employee of employees">
+          <td>{{ employee.employeeCode }}</td>
+
+          <td>
+            {{ employee.firstName }} {{ employee.lastName }}
+          </td>
+
+          <td>{{ employee.email }}</td>
+
+          <td>{{ employee.department || '-' }}</td>
+
+          <td>{{ employee.jobTitle || '-' }}</td>
+
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="employee.employmentStatus.toLowerCase()"
+            >
+              {{ employee.employmentStatus }}
+            </span>
+          </td>
+
+          <td>
+            <a
+              [routerLink]="['/employees', employee.id]"
+              class="view-button"
+            >
+              View
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

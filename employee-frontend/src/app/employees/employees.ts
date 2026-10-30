@@ -7,6 +7,7 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { EmployeeService } from '../services/employee.service';
 import { Employee } from '../models/employee';
@@ -20,6 +21,7 @@ import { Employee } from '../models/employee';
 export class Employees implements OnInit {
 
   private readonly employeeService = inject(EmployeeService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
   employees: Employee[] = [];
@@ -31,10 +33,15 @@ export class Employees implements OnInit {
 
   errorMessage = '';
   formErrorMessage = '';
+  successMessage = '';
 
   newEmployee: Employee = this.createEmptyEmployee();
 
   ngOnInit(): void {
+    if (window.location.pathname === '/employees/new') {
+      this.showCreateForm = true;
+    }
+
     this.loadEmployees();
   }
 
@@ -77,6 +84,7 @@ export class Employees implements OnInit {
 
   onSaveEmployee(): void {
     this.formErrorMessage = '';
+    this.successMessage = '';
 
     if (this.isSaving) {
       return;
@@ -100,7 +108,10 @@ export class Employees implements OnInit {
         ];
 
         this.isSaving = false;
-        this.showCreateForm = false;
+
+        this.successMessage =
+          `Employee ${createdEmployee.firstName} ${createdEmployee.lastName} created successfully!`;
+
         this.newEmployee = this.createEmptyEmployee();
 
         this.cdr.detectChanges();
@@ -119,8 +130,10 @@ export class Employees implements OnInit {
   }
 
   onCancelCreate(): void {
-    this.showCreateForm = false;
     this.formErrorMessage = '';
+    this.successMessage = '';
     this.newEmployee = this.createEmptyEmployee();
+
+    this.router.navigate(['/employees']);
   }
 }

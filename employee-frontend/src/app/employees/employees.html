@@ -8,7 +8,7 @@
     <button
       type="button"
       class="primary-button"
-      (click)="showCreateForm = !showCreateForm"
+      (click)="showCreateForm ? onCancelCreate() : onAddEmployee()"
     >
       {{ showCreateForm ? '− Close Form' : '+ Add Employee' }}
     </button>
@@ -23,63 +23,131 @@
         </div>
       </div>
 
+      @if (successMessage) {
+        <div class="success-state">
+          {{ successMessage }}
+        </div>
+      }
+
       <form #employeeForm="ngForm" (ngSubmit)="onSaveEmployee()">
         <div class="form-grid">
+
+          <!-- Employee Code -->
           <div class="form-group">
             <label for="employeeCode">Employee Code *</label>
+
             <input
               id="employeeCode"
               type="text"
               name="employeeCode"
               [(ngModel)]="newEmployee.employeeCode"
+              #employeeCode="ngModel"
               required
               maxlength="20"
-              placeholder="e.g. EMP003"
+              placeholder="e.g. EMP007"
             />
+
+            @if (employeeCode.invalid && (employeeCode.touched || employeeCode.dirty)) {
+              <small class="field-error">
+                @if (employeeCode.errors?.['required']) {
+                  Employee Code is required.
+                }
+                @if (employeeCode.errors?.['maxlength']) {
+                  Employee Code cannot exceed 20 characters.
+                }
+              </small>
+            }
           </div>
 
+          <!-- First Name -->
           <div class="form-group">
             <label for="firstName">First Name *</label>
+
             <input
               id="firstName"
               type="text"
               name="firstName"
               [(ngModel)]="newEmployee.firstName"
+              #firstName="ngModel"
               required
               maxlength="100"
               placeholder="Enter first name"
             />
+
+            @if (firstName.invalid && (firstName.touched || firstName.dirty)) {
+              <small class="field-error">
+                @if (firstName.errors?.['required']) {
+                  First Name is required.
+                }
+                @if (firstName.errors?.['maxlength']) {
+                  First Name cannot exceed 100 characters.
+                }
+              </small>
+            }
           </div>
 
+          <!-- Last Name -->
           <div class="form-group">
             <label for="lastName">Last Name *</label>
+
             <input
               id="lastName"
               type="text"
               name="lastName"
               [(ngModel)]="newEmployee.lastName"
+              #lastName="ngModel"
               required
               maxlength="100"
               placeholder="Enter last name"
             />
+
+            @if (lastName.invalid && (lastName.touched || lastName.dirty)) {
+              <small class="field-error">
+                @if (lastName.errors?.['required']) {
+                  Last Name is required.
+                }
+                @if (lastName.errors?.['maxlength']) {
+                  Last Name cannot exceed 100 characters.
+                }
+              </small>
+            }
           </div>
 
+          <!-- Email -->
           <div class="form-group">
             <label for="email">Email Address *</label>
+
             <input
               id="email"
               type="email"
               name="email"
               [(ngModel)]="newEmployee.email"
+              #email="ngModel"
               required
               email
               maxlength="254"
               placeholder="name@example.com"
             />
+
+            @if (email.invalid && (email.touched || email.dirty)) {
+              <small class="field-error">
+                @if (email.errors?.['required']) {
+                  Email Address is required.
+                }
+                @if (email.errors?.['email']) {
+                  Please enter a valid email address.
+                }
+                @if (email.errors?.['maxlength']) {
+                  Email Address cannot exceed 254 characters.
+                }
+              </small>
+            }
           </div>
 
+          <!-- Phone -->
           <div class="form-group">
             <label for="phone">Phone Number</label>
+
             <input
               id="phone"
               type="tel"
@@ -90,8 +158,10 @@
             />
           </div>
 
+          <!-- Department -->
           <div class="form-group">
             <label for="department">Department</label>
+
             <input
               id="department"
               type="text"
@@ -102,8 +172,10 @@
             />
           </div>
 
+          <!-- Job Title -->
           <div class="form-group">
             <label for="jobTitle">Job Title</label>
+
             <input
               id="jobTitle"
               type="text"
@@ -114,8 +186,10 @@
             />
           </div>
 
+          <!-- Salary -->
           <div class="form-group">
             <label for="salary">Salary</label>
+
             <input
               id="salary"
               type="number"
@@ -127,8 +201,10 @@
             />
           </div>
 
+          <!-- Hire Date -->
           <div class="form-group">
             <label for="hireDate">Hire Date</label>
+
             <input
               id="hireDate"
               type="date"
@@ -137,19 +213,29 @@
             />
           </div>
 
+          <!-- Employment Status -->
           <div class="form-group">
             <label for="employmentStatus">Employment Status *</label>
+
             <select
               id="employmentStatus"
               name="employmentStatus"
               [(ngModel)]="newEmployee.employmentStatus"
+              #employmentStatus="ngModel"
               required
             >
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
               <option value="ON_LEAVE">On Leave</option>
             </select>
+
+            @if (employmentStatus.invalid && employmentStatus.touched) {
+              <small class="field-error">
+                Employment Status is required.
+              </small>
+            }
           </div>
+
         </div>
 
         @if (formErrorMessage) {
@@ -177,73 +263,75 @@
     </div>
   }
 
-  <div class="employee-summary">
-    <div>
-      <span class="summary-label">Employee Directory</span>
-      <h3>All Employees</h3>
-      <p>{{ employees.length }} employee(s) found</p>
-    </div>
-
-    <div class="summary-icon">EM</div>
-  </div>
-
-  <div class="content-card">
-    <div class="table-toolbar">
+  @if (!showCreateForm) {
+    <div class="employee-summary">
       <div>
-        <h3>Employee List</h3>
-        <p>Employee information retrieved from the backend API.</p>
+        <span class="summary-label">Employee Directory</span>
+        <h3>All Employees</h3>
+        <p>{{ employees.length }} employee(s) found</p>
       </div>
+
+      <div class="summary-icon">EM</div>
     </div>
 
-    @if (isLoading) {
-      <div class="empty-state">Loading employees...</div>
-    } @else if (errorMessage) {
-      <div class="error-state">{{ errorMessage }}</div>
-    } @else {
-      <div class="table-wrapper">
-        <table>
-          <thead>
-            <tr>
-              <th>Employee</th>
-              <th>Employee ID</th>
-              <th>Email</th>
-              <th>Department</th>
-              <th>Job Title</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            @for (employee of employees; track employee.id) {
-              <tr>
-                <td>
-                  <div class="employee-name">
-                    {{ employee.firstName }} {{ employee.lastName }}
-                  </div>
-                </td>
-                <td>{{ employee.employeeCode }}</td>
-                <td>{{ employee.email }}</td>
-                <td>{{ employee.department || '—' }}</td>
-                <td>{{ employee.jobTitle || '—' }}</td>
-                <td>
-                  <span
-                    class="status-badge"
-                    [class.inactive]="employee.employmentStatus !== 'ACTIVE'"
-                  >
-                    {{ employee.employmentStatus }}
-                  </span>
-                </td>
-              </tr>
-            } @empty {
-              <tr>
-                <td colspan="6" class="empty-state">
-                  No employee records found.
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+    <div class="content-card">
+      <div class="table-toolbar">
+        <div>
+          <h3>Employee List</h3>
+          <p>Employee information retrieved from the backend API.</p>
+        </div>
       </div>
-    }
-  </div>
+
+      @if (isLoading) {
+        <div class="empty-state">Loading employees...</div>
+      } @else if (errorMessage) {
+        <div class="error-state">{{ errorMessage }}</div>
+      } @else {
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Employee ID</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Job Title</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (employee of employees; track employee.id) {
+                <tr>
+                  <td>
+                    <div class="employee-name">
+                      {{ employee.firstName }} {{ employee.lastName }}
+                    </div>
+                  </td>
+                  <td>{{ employee.employeeCode }}</td>
+                  <td>{{ employee.email }}</td>
+                  <td>{{ employee.department || '—' }}</td>
+                  <td>{{ employee.jobTitle || '—' }}</td>
+                  <td>
+                    <span
+                      class="status-badge"
+                      [class.inactive]="employee.employmentStatus !== 'ACTIVE'"
+                    >
+                      {{ employee.employmentStatus }}
+                    </span>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="6" class="empty-state">
+                    No employee records found.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </div>
+  }
 </section>

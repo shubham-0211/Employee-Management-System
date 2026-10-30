@@ -1,0 +1,113 @@
+<div class="employee-details-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Employee Details</h1>
+      <p>View complete employee information.</p>
+    </div>
+
+    <a routerLink="/employees" class="back-button">
+      Back to Employees
+    </a>
+  </div>
+
+  <div *ngIf="isLoading" class="message">
+    Loading employee details...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+
+    <button type="button" (click)="loadEmployee()">
+      Retry
+    </button>
+  </div>
+
+  <div *ngIf="employee as emp" class="details-card">
+
+    <div class="employee-heading">
+      <div>
+        <h2>{{ emp.firstName }} {{ emp.lastName }}</h2>
+        <p>{{ emp.jobTitle || 'Job title not specified' }}</p>
+      </div>
+
+      <span
+        class="status-badge"
+        [ngClass]="emp.employmentStatus.toLowerCase()"
+      >
+        {{ emp.employmentStatus }}
+      </span>
+    </div>
+
+    <div class="details-section">
+      <h3>Personal Information</h3>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Employee Code</label>
+          <span>{{ emp.employeeCode }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Employee ID</label>
+          <span>{{ emp.id }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>First Name</label>
+          <span>{{ emp.firstName }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Last Name</label>
+          <span>{{ emp.lastName }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Email Address</label>
+          <span>{{ emp.email }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Phone Number</label>
+          <span>{{ emp.phone || '-' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-section">
+      <h3>Employment Information</h3>
+
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Department</label>
+          <span>{{ emp.department || '-' }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Job Title</label>
+          <span>{{ emp.jobTitle || '-' }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Salary</label>
+          <span>
+            {{ emp.salary != null ? (emp.salary | currency:'INR':'symbol':'1.2-2') : '-' }}
+          </span>
+        </div>
+
+        <div class="detail-item">
+          <label>Hire Date</label>
+          <span>{{ emp.hireDate || '-' }}</span>
+        </div>
+
+        <div class="detail-item">
+          <label>Employment Status</label>
+          <span>{{ emp.employmentStatus }}</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

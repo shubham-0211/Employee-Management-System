@@ -1,0 +1,17 @@
+# Automatically detect text and binary files
+* text=auto
+
+# Use LF line endings for all text files
+* text eol=lf
+
+# Preserve binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.jar binary
+*.zip binary
+*.woff binary
+*.woff2 binary

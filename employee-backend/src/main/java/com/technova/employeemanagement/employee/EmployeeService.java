@@ -32,10 +32,11 @@ public class EmployeeService {
     @Transactional
     public Employee create(EmployeeRequest request) {
         if (repository.existsByEmployeeCode(request.getEmployeeCode())) {
-            throw new IllegalArgumentException("Employee code already exists");
+            throw new DuplicateEmployeeException("Employee code already exists");
         }
+
         if (repository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new DuplicateEmployeeException("Email already exists");
         }
 
         Employee employee = new Employee();
@@ -49,10 +50,11 @@ public class EmployeeService {
 
         if (repository.existsByEmployeeCodeAndIdNot(
                 request.getEmployeeCode(), id)) {
-            throw new IllegalArgumentException("Employee code already exists");
+            throw new DuplicateEmployeeException("Employee code already exists");
         }
+
         if (repository.existsByEmailAndIdNot(request.getEmail(), id)) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new DuplicateEmployeeException("Email already exists");
         }
 
         applyRequest(employee, request);

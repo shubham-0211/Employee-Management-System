@@ -20,6 +20,13 @@ public class EmployeeExceptionHandler {
                 .body(Map.of("error", exception.getMessage()));
     }
 
+    @ExceptionHandler(DuplicateEmployeeException.class)
+    public ResponseEntity<Map<String, String>> handleDuplicate(
+            DuplicateEmployeeException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", exception.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleBadRequest(
             IllegalArgumentException exception) {

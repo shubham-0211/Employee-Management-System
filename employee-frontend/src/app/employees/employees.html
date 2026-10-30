@@ -5,18 +5,183 @@
       <p>View and manage your organization's employee records.</p>
     </div>
 
-    <button type="button" class="primary-button">
-      + Add Employee
+    <button
+      type="button"
+      class="primary-button"
+      (click)="showCreateForm = !showCreateForm"
+    >
+      {{ showCreateForm ? '− Close Form' : '+ Add Employee' }}
     </button>
   </div>
+
+  @if (showCreateForm) {
+    <div class="content-card employee-form-card">
+      <div class="table-toolbar">
+        <div>
+          <h3>Add New Employee</h3>
+          <p>Enter the employee details below.</p>
+        </div>
+      </div>
+
+      <form #employeeForm="ngForm" (ngSubmit)="onSaveEmployee()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="employeeCode">Employee Code *</label>
+            <input
+              id="employeeCode"
+              type="text"
+              name="employeeCode"
+              [(ngModel)]="newEmployee.employeeCode"
+              required
+              maxlength="20"
+              placeholder="e.g. EMP003"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input
+              id="firstName"
+              type="text"
+              name="firstName"
+              [(ngModel)]="newEmployee.firstName"
+              required
+              maxlength="100"
+              placeholder="Enter first name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input
+              id="lastName"
+              type="text"
+              name="lastName"
+              [(ngModel)]="newEmployee.lastName"
+              required
+              maxlength="100"
+              placeholder="Enter last name"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              [(ngModel)]="newEmployee.email"
+              required
+              email
+              maxlength="254"
+              placeholder="name@example.com"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input
+              id="phone"
+              type="tel"
+              name="phone"
+              [(ngModel)]="newEmployee.phone"
+              maxlength="30"
+              placeholder="Enter phone number"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input
+              id="department"
+              type="text"
+              name="department"
+              [(ngModel)]="newEmployee.department"
+              maxlength="100"
+              placeholder="e.g. IT"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+            <input
+              id="jobTitle"
+              type="text"
+              name="jobTitle"
+              [(ngModel)]="newEmployee.jobTitle"
+              maxlength="100"
+              placeholder="e.g. Java Developer"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="salary">Salary</label>
+            <input
+              id="salary"
+              type="number"
+              name="salary"
+              [(ngModel)]="newEmployee.salary"
+              min="0"
+              step="0.01"
+              placeholder="Enter salary"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="hireDate">Hire Date</label>
+            <input
+              id="hireDate"
+              type="date"
+              name="hireDate"
+              [(ngModel)]="newEmployee.hireDate"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="employmentStatus">Employment Status *</label>
+            <select
+              id="employmentStatus"
+              name="employmentStatus"
+              [(ngModel)]="newEmployee.employmentStatus"
+              required
+            >
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+              <option value="ON_LEAVE">On Leave</option>
+            </select>
+          </div>
+        </div>
+
+        @if (formErrorMessage) {
+          <div class="error-state">{{ formErrorMessage }}</div>
+        }
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="secondary-button"
+            (click)="onCancelCreate()"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="primary-button"
+            [disabled]="employeeForm.invalid || isSaving"
+          >
+            {{ isSaving ? 'Saving...' : 'Save Employee' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  }
 
   <div class="employee-summary">
     <div>
       <span class="summary-label">Employee Directory</span>
       <h3>All Employees</h3>
-      <p>
-        {{ employees.length }} employee(s) found
-      </p>
+      <p>{{ employees.length }} employee(s) found</p>
     </div>
 
     <div class="summary-icon">EM</div>

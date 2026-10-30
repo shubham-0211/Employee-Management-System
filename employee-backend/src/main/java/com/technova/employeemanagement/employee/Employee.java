@@ -1,8 +1,12 @@
 package com.technova.employeemanagement.employee;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+
+import com.technova.employeemanagement.department.Department;
 
 @Entity
 @Table(name = "employees")
@@ -27,8 +31,9 @@ public class Employee {
     @Column(length = 30)
     private String phone;
 
-    @Column(length = 100)
-    private String department;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "department_id")
+    private Department departmentEntity;
 
     @Column(name = "job_title", length = 100)
     private String jobTitle;
@@ -89,12 +94,26 @@ public class Employee {
         this.phone = phone;
     }
 
+    // Preserve the existing flat JSON response expected by Angular.
     public String getDepartment() {
-        return department;
+        return departmentEntity != null
+                ? departmentEntity.getDepartmentName()
+                : null;
     }
 
-    public void setDepartment(String department) {
-        this.department = department;
+    @JsonIgnore
+    public Department getDepartmentEntity() {
+        return departmentEntity;
+    }
+
+    public void setDepartmentEntity(Department departmentEntity) {
+        this.departmentEntity = departmentEntity;
+    }
+
+    public Long getDepartmentId() {
+        return departmentEntity != null
+                ? departmentEntity.getId()
+                : null;
     }
 
     public String getJobTitle() {

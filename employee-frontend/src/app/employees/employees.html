@@ -160,16 +160,48 @@
 
           <!-- Department -->
           <div class="form-group">
-            <label for="department">Department</label>
+            <label for="departmentId">Department *</label>
 
-            <input
-              id="department"
-              type="text"
-              name="department"
-              [(ngModel)]="newEmployee.department"
-              maxlength="100"
-              placeholder="e.g. IT"
-            />
+            <select
+              id="departmentId"
+              name="departmentId"
+              [(ngModel)]="newEmployee.departmentId"
+              #departmentId="ngModel"
+              required
+              [disabled]="isLoadingDepartments || departments.length === 0"
+            >
+              <option [ngValue]="undefined">
+                {{
+                  isLoadingDepartments
+                    ? 'Loading departments...'
+                    : 'Select Department'
+                }}
+              </option>
+
+              @for (department of departments; track department.id) {
+                <option [ngValue]="department.id">
+                  {{ department.departmentName }}
+                </option>
+              }
+            </select>
+
+            @if (departmentId.invalid && departmentId.touched) {
+              <small class="field-error">
+                Department selection is required.
+              </small>
+            }
+
+            @if (departmentErrorMessage) {
+              <small class="field-error">
+                {{ departmentErrorMessage }}
+              </small>
+            }
+
+            @if (!isLoadingDepartments && !departmentErrorMessage && departments.length === 0) {
+              <small class="field-error">
+                No active departments available. Create an active department first.
+              </small>
+            }
           </div>
 
           <!-- Job Title -->
@@ -254,7 +286,7 @@
           <button
             type="submit"
             class="primary-button"
-            [disabled]="employeeForm.invalid || isSaving"
+            [disabled]="employeeForm.invalid || isSaving || isLoadingDepartments || departments.length === 0"
           >
             {{ isSaving ? 'Saving...' : 'Save Employee' }}
           </button>

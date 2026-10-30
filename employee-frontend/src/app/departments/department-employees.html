@@ -1,0 +1,173 @@
+<div class="department-employees-page">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <button
+        type="button"
+        class="back-button"
+        (click)="goBack()"
+      >
+        ← Back to Departments
+      </button>
+
+      <h1>
+        {{ department?.departmentName || 'Department Employees' }}
+      </h1>
+
+      <p>
+        View all employees assigned to this department.
+      </p>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (isLoading) {
+    <div class="loading-message">
+      Loading department employees...
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!isLoading && errorMessage) {
+    <div class="error-message">
+      {{ errorMessage }}
+
+      <button type="button" (click)="retry()">
+        Retry
+      </button>
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage && department) {
+
+    <!-- Department Information -->
+    <div class="department-info-card">
+      <div>
+        <span>Department Code</span>
+        <strong>{{ department.departmentCode }}</strong>
+      </div>
+
+      <div>
+        <span>Department Name</span>
+        <strong>{{ department.departmentName }}</strong>
+      </div>
+
+      <div>
+        <span>Department Status</span>
+        <strong
+          class="status-badge"
+          [class.inactive]="department.status === 'INACTIVE'"
+        >
+          {{ department.status }}
+        </strong>
+      </div>
+    </div>
+
+    <!-- Employee Summary -->
+    <div class="employee-summary">
+
+      <div class="summary-card">
+        <span>Total Employees</span>
+        <h2>{{ employees.length }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <span>Active Employees</span>
+        <h2>{{ activeEmployees }}</h2>
+      </div>
+
+      <div class="summary-card">
+        <span>Inactive Employees</span>
+        <h2>{{ inactiveEmployees }}</h2>
+      </div>
+
+    </div>
+
+    <!-- Employee Directory -->
+    <div class="content-card">
+
+      <div class="section-heading">
+        <div>
+          <h2>Employee Directory</h2>
+          <p>Employees currently assigned to this department.</p>
+        </div>
+
+        <span class="employee-total">
+          {{ employees.length }} Employees
+        </span>
+      </div>
+
+      @if (employees.length === 0) {
+        <div class="empty-message">
+          <h3>No employees assigned</h3>
+          <p>
+            There are currently no employees assigned to
+            {{ department.departmentName }}.
+          </p>
+        </div>
+      }
+
+      @if (employees.length > 0) {
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee Code</th>
+                <th>Employee Name</th>
+                <th>Email</th>
+                <th>Job Title</th>
+                <th>Employment Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (employee of employees; track employee.id) {
+                <tr>
+
+                  <td>
+                    <strong>{{ employee.employeeCode }}</strong>
+                  </td>
+
+                  <td>
+                    {{ employee.firstName }} {{ employee.lastName }}
+                  </td>
+
+                  <td>{{ employee.email }}</td>
+
+                  <td>{{ employee.jobTitle || '—' }}</td>
+
+                  <td>
+                    <span
+                      class="status-badge"
+                      [class.inactive]="employee.employmentStatus !== 'ACTIVE'"
+                    >
+                      {{ employee.employmentStatus }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <button
+                      type="button"
+                      class="view-button"
+                      (click)="viewEmployee(employee)"
+                    >
+                      View Employee
+                    </button>
+                  </td>
+
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+</div>

@@ -10,7 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { EmployeeService } from '../services/employee.service';
+import { DepartmentService } from '../services/department.service';
+
 import { Employee } from '../models/employee';
+import { Department } from '../models/department';
 
 @Component({
   selector: 'app-employees',
@@ -21,17 +24,21 @@ import { Employee } from '../models/employee';
 export class Employees implements OnInit {
 
   private readonly employeeService = inject(EmployeeService);
+  private readonly departmentService = inject(DepartmentService);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
   employees: Employee[] = [];
+  departments: Department[] = [];
 
   isLoading = false;
+  isLoadingDepartments = false;
   isSaving = false;
 
   showCreateForm = false;
 
   errorMessage = '';
+  departmentErrorMessage = '';
   formErrorMessage = '';
   successMessage = '';
 
@@ -42,6 +49,7 @@ export class Employees implements OnInit {
       this.showCreateForm = true;
     }
 
+    this.loadDepartments();
     this.loadEmployees();
   }
 
@@ -52,12 +60,38 @@ export class Employees implements OnInit {
       lastName: '',
       email: '',
       phone: '',
-      department: '',
+      departmentId: undefined,
       jobTitle: '',
       salary: undefined,
       hireDate: '',
       employmentStatus: 'ACTIVE',
     };
+  }
+
+  // Load active departments for the department dropdown
+  loadDepartments(): void {
+    this.isLoadingDepartments = true;
+    this.departmentErrorMessage = '';
+
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => {
+        this.departments = data.filter(
+          department => department.status === 'ACTIVE'
+        );
+
+        this.isLoadingDepartments = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Failed to load departments:', error);
+
+        this.departmentErrorMessage =
+          'Unable to load departments. Please check the backend connection.';
+
+        this.isLoadingDepartments = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   loadEmployees(): void {
@@ -90,12 +124,18 @@ export class Employees implements OnInit {
       return;
     }
 
+    if (!this.newEmployee.departmentId) {
+      this.formErrorMessage = 'Please select a department.';
+      return;
+    }
+
     const employee: Employee = {
       ...this.newEmployee,
       employeeCode: this.newEmployee.employeeCode.trim(),
       firstName: this.newEmployee.firstName.trim(),
       lastName: this.newEmployee.lastName.trim(),
       email: this.newEmployee.email.trim(),
+      departmentId: Number(this.newEmployee.departmentId),
     };
 
     this.isSaving = true;

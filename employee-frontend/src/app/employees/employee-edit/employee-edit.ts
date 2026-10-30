@@ -10,7 +10,10 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 import { EmployeeService } from '../../services/employee.service';
+import { DepartmentService } from '../../services/department.service';
+
 import { Employee } from '../../models/employee';
+import { Department } from '../../models/department';
 
 @Component({
   selector: 'app-employee-edit',
@@ -21,6 +24,7 @@ import { Employee } from '../../models/employee';
 export class EmployeeEdit implements OnInit {
 
   private readonly employeeService = inject(EmployeeService);
+  private readonly departmentService = inject(DepartmentService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
@@ -28,11 +32,14 @@ export class EmployeeEdit implements OnInit {
   employeeId = 0;
 
   employee: Employee | null = null;
+  departments: Department[] = [];
 
   isLoading = false;
+  isLoadingDepartments = false;
   isSaving = false;
 
   errorMessage = '';
+  departmentErrorMessage = '';
   formErrorMessage = '';
   successMessage = '';
 
@@ -44,7 +51,34 @@ export class EmployeeEdit implements OnInit {
       return;
     }
 
+    this.loadDepartments();
     this.loadEmployee();
+  }
+
+  // Load departments for the department dropdown
+  loadDepartments(): void {
+    this.isLoadingDepartments = true;
+    this.departmentErrorMessage = '';
+
+    this.departmentService.getDepartments().subscribe({
+      next: (data) => {
+        this.departments = data.filter(
+          department => department.status === 'ACTIVE'
+        );
+
+        this.isLoadingDepartments = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Failed to load departments:', error);
+
+        this.departmentErrorMessage =
+          'Unable to load departments. Please check the backend connection.';
+
+        this.isLoadingDepartments = false;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   loadEmployee(): void {
@@ -54,6 +88,7 @@ export class EmployeeEdit implements OnInit {
     this.employeeService.getEmployeeById(this.employeeId).subscribe({
       next: (data) => {
         this.employee = { ...data };
+
         this.isLoading = false;
         this.cdr.detectChanges();
       },
@@ -77,12 +112,18 @@ export class EmployeeEdit implements OnInit {
     this.formErrorMessage = '';
     this.successMessage = '';
 
+    if (!this.employee.departmentId) {
+      this.formErrorMessage = 'Please select a department.';
+      return;
+    }
+
     const updatedEmployee: Employee = {
       ...this.employee,
       employeeCode: this.employee.employeeCode.trim(),
       firstName: this.employee.firstName.trim(),
       lastName: this.employee.lastName.trim(),
       email: this.employee.email.trim(),
+      departmentId: Number(this.employee.departmentId),
     };
 
     this.isSaving = true;
@@ -98,7 +139,6 @@ export class EmployeeEdit implements OnInit {
 
           this.cdr.detectChanges();
 
-          // Redirect to the employee details page with a success indicator.
           this.router.navigate(['/employees', this.employeeId], {
             queryParams: { updated: 'true' },
           });

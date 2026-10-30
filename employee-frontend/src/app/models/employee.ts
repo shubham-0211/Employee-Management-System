@@ -6,6 +6,7 @@ export interface Employee {
   email: string;
   phone?: string;
   department?: string;
+  departmentId?: number;
   jobTitle?: string;
   salary?: number;
   hireDate?: string;

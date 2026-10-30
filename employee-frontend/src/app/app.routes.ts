@@ -7,6 +7,20 @@ export const routes: Routes = [
       import('./dashboard/dashboard').then((m) => m.Dashboard),
   },
   {
+    path: 'departments/:id/employees',
+    loadComponent: () =>
+      import('./departments/department-employees').then(
+        (m) => m.DepartmentEmployees
+      ),
+  },
+  {
+    path: 'departments',
+    loadComponent: () =>
+      import('./departments/department-management').then(
+        (m) => m.DepartmentManagement
+      ),
+  },
+  {
     path: 'employees/new',
     loadComponent: () =>
       import('./employees/employees').then((m) => m.Employees),

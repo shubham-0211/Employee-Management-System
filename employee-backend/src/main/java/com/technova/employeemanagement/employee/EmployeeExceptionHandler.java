@@ -27,6 +27,13 @@ public class EmployeeExceptionHandler {
                 .body(Map.of("error", exception.getMessage()));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalState(
+            IllegalStateException exception) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(Map.of("error", exception.getMessage()));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, String>> handleBadRequest(
             IllegalArgumentException exception) {
@@ -43,7 +50,9 @@ public class EmployeeExceptionHandler {
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
                 .findFirst()
                 .orElse("Invalid request");
-        return ResponseEntity.badRequest().body(Map.of("error", message));
+
+        return ResponseEntity.badRequest()
+                .body(Map.of("error", message));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)

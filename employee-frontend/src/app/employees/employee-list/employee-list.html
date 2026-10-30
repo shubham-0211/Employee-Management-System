@@ -1,5 +1,6 @@
 <div class="employee-list-page">
 
+  <!-- Page Header -->
   <div class="page-header">
     <div>
       <h1>Employee Directory</h1>
@@ -11,91 +12,232 @@
     </a>
   </div>
 
-  <!-- Delete success notification -->
+  <!-- Delete Success Notification -->
   <div *ngIf="successMessage" class="success-message">
     {{ successMessage }}
   </div>
 
+  <!-- Employee Summary -->
   <div class="employee-summary">
     <div class="summary-card">
       <span>Total Employees</span>
       <h2>{{ employees.length }}</h2>
     </div>
+
+    <div class="summary-card">
+      <span>Filtered Employees</span>
+      <h2>{{ filteredEmployees.length }}</h2>
+    </div>
   </div>
 
+  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-message">
     Loading employees...
   </div>
 
+  <!-- Error State -->
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
+
     <button type="button" (click)="loadEmployees()">
       Retry
     </button>
   </div>
 
-  <div
-    *ngIf="!isLoading && !errorMessage && employees.length === 0"
-    class="empty-message"
-  >
-    <h3>No employees found</h3>
-    <p>Start by adding your first employee.</p>
-    <a routerLink="/employees/new" class="add-button">
-      Add Employee
-    </a>
-  </div>
+  <ng-container *ngIf="!isLoading && !errorMessage">
 
-  <div
-    *ngIf="!isLoading && !errorMessage && employees.length > 0"
-    class="table-container"
-  >
-    <table>
-      <thead>
-        <tr>
-          <th>Employee Code</th>
-          <th>Employee Name</th>
-          <th>Email</th>
-          <th>Department</th>
-          <th>Job Title</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
+    <!-- Search and Filters -->
+    <div *ngIf="employees.length > 0" class="filter-section">
 
-      <tbody>
-        <tr *ngFor="let employee of employees">
-          <td>{{ employee.employeeCode }}</td>
+      <div class="search-box">
+        <label for="employeeSearch">Search Employees</label>
 
-          <td>
-            {{ employee.firstName }} {{ employee.lastName }}
-          </td>
+        <input
+          id="employeeSearch"
+          type="text"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="onFiltersChanged()"
+          placeholder="Search name, employee code or email..."
+        />
+      </div>
 
-          <td>{{ employee.email }}</td>
+      <div class="filter-control">
+        <label for="departmentFilter">Department</label>
 
-          <td>{{ employee.department || '-' }}</td>
+        <select
+          id="departmentFilter"
+          [(ngModel)]="selectedDepartment"
+          (ngModelChange)="onFiltersChanged()"
+        >
+          <option value="ALL">All Departments</option>
 
-          <td>{{ employee.jobTitle || '-' }}</td>
+          <option
+            *ngFor="let department of departments"
+            [value]="department"
+          >
+            {{ department }}
+          </option>
+        </select>
+      </div>
 
-          <td>
-            <span
-              class="status-badge"
-              [ngClass]="employee.employmentStatus.toLowerCase()"
-            >
-              {{ employee.employmentStatus }}
-            </span>
-          </td>
+      <div class="filter-control">
+        <label for="statusFilter">Employment Status</label>
 
-          <td>
-            <a
-              [routerLink]="['/employees', employee.id]"
-              class="view-button"
-            >
-              View
-            </a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+        <select
+          id="statusFilter"
+          [(ngModel)]="selectedStatus"
+          (ngModelChange)="onFiltersChanged()"
+        >
+          <option value="ALL">All Statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="INACTIVE">Inactive</option>
+        </select>
+      </div>
+
+      <button
+        type="button"
+        class="clear-filter-button"
+        (click)="clearFilters()"
+      >
+        Clear Filters
+      </button>
+
+    </div>
+
+    <!-- No Employees -->
+    <div *ngIf="employees.length === 0" class="empty-message">
+      <h3>No employees found</h3>
+      <p>Start by adding your first employee.</p>
+
+      <a routerLink="/employees/new" class="add-button">
+        Add Employee
+      </a>
+    </div>
+
+    <!-- No Search Results -->
+    <div
+      *ngIf="employees.length > 0 && filteredEmployees.length === 0"
+      class="empty-message"
+    >
+      <h3>No matching employees</h3>
+      <p>Try changing your search term or filters.</p>
+
+      <button
+        type="button"
+        class="clear-filter-button"
+        (click)="clearFilters()"
+      >
+        Clear Search and Filters
+      </button>
+    </div>
+
+    <!-- Employee Table -->
+    <div
+      *ngIf="filteredEmployees.length > 0"
+      class="table-container"
+    >
+      <table>
+        <thead>
+          <tr>
+            <th>Employee Code</th>
+            <th>Employee Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Job Title</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let employee of paginatedEmployees">
+
+            <td>{{ employee.employeeCode }}</td>
+
+            <td>
+              {{ employee.firstName }} {{ employee.lastName }}
+            </td>
+
+            <td>{{ employee.email }}</td>
+
+            <td>{{ employee.department || '-' }}</td>
+
+            <td>{{ employee.jobTitle || '-' }}</td>
+
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="employee.employmentStatus.toLowerCase()"
+              >
+                {{ employee.employmentStatus }}
+              </span>
+            </td>
+
+            <td>
+              <a
+                [routerLink]="['/employees', employee.id]"
+                class="view-button"
+              >
+                View
+              </a>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div
+      *ngIf="filteredEmployees.length > 0"
+      class="pagination-section"
+    >
+
+      <div class="pagination-info">
+        Showing {{ startRecord }}–{{ endRecord }}
+        of {{ filteredEmployees.length }} employees
+      </div>
+
+      <div class="page-size-control">
+        <label for="pageSize">Rows per page:</label>
+
+        <select
+          id="pageSize"
+          [ngModel]="pageSize"
+          (ngModelChange)="changePageSize(+$event)"
+        >
+          <option *ngFor="let size of pageSizeOptions" [value]="size">
+            {{ size }}
+          </option>
+        </select>
+      </div>
+
+      <div class="pagination-controls">
+
+        <button
+          type="button"
+          (click)="changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+        >
+          Previous
+        </button>
+
+        <span>
+          Page {{ currentPage }} of {{ totalPages }}
+        </span>
+
+        <button
+          type="button"
+          (click)="changePage(currentPage + 1)"
+          [disabled]="currentPage === totalPages"
+        >
+          Next
+        </button>
+
+      </div>
+
+    </div>
+
+  </ng-container>
 
 </div>

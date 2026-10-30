@@ -1,53 +1,206 @@
-<section class="dashboard">
-  <div class="page-heading">
+<div class="dashboard-page">
+
+  <!-- Welcome Header -->
+  <div class="welcome-header">
     <div>
-      <h2>Dashboard</h2>
-      <p>Welcome to your Employee Management System.</p>
+      <h1>HR Management Overview</h1>
+      <p>Welcome to your Workforce Administration Portal.</p>
     </div>
 
-    <a class="primary-button" routerLink="/employees">
-      View Employees
+    <a routerLink="/employees" class="primary-button">
+      Employee Management
     </a>
   </div>
 
-  <div class="stats-grid">
-    <article class="stat-card">
-      <div class="stat-icon blue">EM</div>
-      <div>
-        <p>Total Employees</p>
-        <h3>Manage your workforce</h3>
-        <span>Employee directory</span>
-      </div>
-    </article>
-
-    <article class="stat-card">
-      <div class="stat-icon green">DB</div>
-      <div>
-        <p>Database</p>
-        <h3>MySQL</h3>
-        <span>Backend data storage</span>
-      </div>
-    </article>
-
-    <article class="stat-card">
-      <div class="stat-icon purple">API</div>
-      <div>
-        <p>Backend</p>
-        <h3>Spring Boot</h3>
-        <span>REST API integration</span>
-      </div>
-    </article>
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="message">
+    Loading HR dashboard...
   </div>
 
-  <div class="content-card">
-    <h3>Getting Started</h3>
-    <p>
-      Use the Employees section to view, add, update, and manage employee
-      records.
-    </p>
+  <!-- Error State -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
 
-    <a class="text-link" routerLink="/employees">
-      Go to Employee Management →
-    </a>
+    <button type="button" (click)="loadDashboardData()">
+      Retry
+    </button>
   </div>
-</section>
+
+  <ng-container *ngIf="!isLoading && !errorMessage">
+
+    <!-- Workforce Statistics -->
+    <section class="statistics-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon employees-icon">👥</div>
+        <div>
+          <p>Total Employees</p>
+          <h2>{{ totalEmployees }}</h2>
+          <span>Registered workforce</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon active-icon">✓</div>
+        <div>
+          <p>Active Employees</p>
+          <h2>{{ activeEmployees }}</h2>
+          <span>Currently active</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon department-icon">🏢</div>
+        <div>
+          <p>Departments</p>
+          <h2>{{ totalDepartments }}</h2>
+          <span>Organizational units</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon inactive-icon">◷</div>
+        <div>
+          <p>Inactive Employees</p>
+          <h2>{{ inactiveEmployees }}</h2>
+          <span>Currently inactive</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Management Modules -->
+    <section class="modules-section">
+
+      <div class="section-heading">
+        <h2>Management Modules</h2>
+        <p>Access and manage different areas of your organization.</p>
+      </div>
+
+      <div class="modules-grid">
+
+        <!-- Employee Management -->
+        <a routerLink="/employees" class="module-card">
+          <div class="module-icon employees-module-icon">
+            <span>👥</span>
+          </div>
+
+          <div class="module-content">
+            <h3>Employee Management</h3>
+            <p>
+              Create, view, update and manage employee records.
+            </p>
+          </div>
+
+          <span class="module-arrow">→</span>
+        </a>
+
+        <!-- Department Management -->
+        <div class="module-card planned-module">
+          <div class="module-icon departments-module-icon">
+            <span>🏢</span>
+          </div>
+
+          <div class="module-content">
+            <h3>Department Management</h3>
+            <p>
+              Manage departments and organizational structure.
+            </p>
+          </div>
+
+          <span class="module-status">Planned</span>
+        </div>
+
+        <!-- Attendance Management -->
+        <div class="module-card planned-module">
+          <div class="module-icon attendance-module-icon">
+            <span>📅</span>
+          </div>
+
+          <div class="module-content">
+            <h3>Attendance Management</h3>
+            <p>
+              Track employee attendance and working days.
+            </p>
+          </div>
+
+          <span class="module-status">Planned</span>
+        </div>
+
+        <!-- Leave Management -->
+        <div class="module-card planned-module">
+          <div class="module-icon leave-module-icon">
+            <span>📝</span>
+          </div>
+
+          <div class="module-content">
+            <h3>Leave Management</h3>
+            <p>
+              Manage employee leave requests and approvals.
+            </p>
+          </div>
+
+          <span class="module-status">Planned</span>
+        </div>
+
+        <!-- Payroll Management -->
+        <div class="module-card planned-module">
+          <div class="module-icon payroll-module-icon">
+            <span>💰</span>
+          </div>
+
+          <div class="module-content">
+            <h3>Payroll Management</h3>
+            <p>
+              Manage salary information and payroll processing.
+            </p>
+          </div>
+
+          <span class="module-status">Planned</span>
+        </div>
+
+        <!-- Reports -->
+        <div class="module-card planned-module">
+          <div class="module-icon reports-module-icon">
+            <span>📊</span>
+          </div>
+
+          <div class="module-content">
+            <h3>Reports & Analytics</h3>
+            <p>
+              View workforce reports and organizational insights.
+            </p>
+          </div>
+
+          <span class="module-status">Planned</span>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Quick Access -->
+    <section class="quick-access-section">
+
+      <div>
+        <h2>Quick Access</h2>
+        <p>Frequently used employee management actions.</p>
+      </div>
+
+      <div class="quick-access-actions">
+
+        <a routerLink="/employees/new" class="quick-action-button">
+          + Add New Employee
+        </a>
+
+        <a routerLink="/employees/directory" class="quick-action-button secondary-button">
+          View Employee Directory
+        </a>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

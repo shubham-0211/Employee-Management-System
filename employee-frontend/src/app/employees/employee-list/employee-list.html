@@ -11,6 +11,11 @@
     </a>
   </div>
 
+  <!-- Delete success notification -->
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+  </div>
+
   <div class="employee-summary">
     <div class="summary-card">
       <span>Total Employees</span>

@@ -6,9 +6,33 @@
       <p>View complete employee information.</p>
     </div>
 
-    <a routerLink="/employees" class="back-button">
-      Back to Employees
-    </a>
+    <div class="header-actions">
+      <a
+        *ngIf="employee"
+        [routerLink]="['/employees', employee.id, 'edit']"
+        class="edit-button"
+      >
+        Edit Employee
+      </a>
+
+      <button
+        *ngIf="employee"
+        type="button"
+        class="delete-button"
+        (click)="onDeleteEmployee()"
+        [disabled]="isDeleting"
+      >
+        {{ isDeleting ? 'Deleting...' : 'Delete Employee' }}
+      </button>
+
+      <a routerLink="/employees" class="back-button">
+        Back to Employees
+      </a>
+    </div>
+  </div>
+
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
   </div>
 
   <div *ngIf="isLoading" class="message">

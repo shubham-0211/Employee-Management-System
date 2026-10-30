@@ -1,0 +1,187 @@
+<div class="employee-dashboard">
+
+  <div class="page-header">
+    <div>
+      <h1>Employee Management</h1>
+      <p>Overview of your organization's workforce.</p>
+    </div>
+
+    <a routerLink="/employees/new" class="primary-button">
+      + Add Employee
+    </a>
+  </div>
+
+  <div *ngIf="isLoading" class="message">
+    Loading dashboard...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+
+    <button type="button" (click)="loadDashboardData()">
+      Retry
+    </button>
+  </div>
+
+  <ng-container *ngIf="!isLoading && !errorMessage">
+
+    <!-- Employee Statistics -->
+    <section class="stats-grid">
+
+      <div class="stat-card">
+        <div class="stat-icon total-icon">
+          <span>👥</span>
+        </div>
+
+        <div>
+          <p>Total Employees</p>
+          <h2>{{ totalEmployees }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon active-icon">
+          <span>✓</span>
+        </div>
+
+        <div>
+          <p>Active Employees</p>
+          <h2>{{ activeEmployees }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon department-icon">
+          <span>🏢</span>
+        </div>
+
+        <div>
+          <p>Departments</p>
+          <h2>{{ totalDepartments }}</h2>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon recent-icon">
+          <span>🕒</span>
+        </div>
+
+        <div>
+          <p>Recently Added</p>
+          <h2>{{ recentEmployees.length }}</h2>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="dashboard-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>Quick Actions</h2>
+          <p>Common employee management tasks.</p>
+        </div>
+      </div>
+
+      <div class="quick-actions">
+
+        <a routerLink="/employees/new" class="action-card">
+          <span class="action-icon">+</span>
+          <div>
+            <h3>Add Employee</h3>
+            <p>Create a new employee record.</p>
+          </div>
+        </a>
+
+        <a routerLink="/employees/directory" class="action-card">
+          <span class="action-icon">☷</span>
+          <div>
+            <h3>Employee Directory</h3>
+            <p>Search and manage employees.</p>
+          </div>
+        </a>
+
+      </div>
+
+    </section>
+
+    <!-- Recently Added Employees -->
+    <section class="dashboard-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>Recently Added Employees</h2>
+          <p>Latest employees added to your organization.</p>
+        </div>
+
+        <a routerLink="/employees/directory" class="view-all-link">
+          View All Employees →
+        </a>
+      </div>
+
+      <div *ngIf="recentEmployees.length === 0" class="empty-message">
+        <h3>No employees found</h3>
+        <p>Add your first employee to get started.</p>
+
+        <a routerLink="/employees/new" class="primary-button">
+          Add Employee
+        </a>
+      </div>
+
+      <div *ngIf="recentEmployees.length > 0" class="recent-table-container">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Employee Code</th>
+              <th>Employee Name</th>
+              <th>Department</th>
+              <th>Job Title</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let employee of recentEmployees">
+
+              <td>{{ employee.employeeCode }}</td>
+
+              <td>
+                {{ employee.firstName }} {{ employee.lastName }}
+              </td>
+
+              <td>{{ employee.department || '-' }}</td>
+
+              <td>{{ employee.jobTitle || '-' }}</td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="employee.employmentStatus.toLowerCase()"
+                >
+                  {{ employee.employmentStatus }}
+                </span>
+              </td>
+
+              <td>
+                <a
+                  [routerLink]="['/employees', employee.id]"
+                  class="view-button"
+                >
+                  View
+                </a>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+    </section>
+
+  </ng-container>
+
+</div>

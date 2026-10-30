@@ -1,0 +1,251 @@
+<div class="edit-employee-page">
+
+  <div class="page-header">
+    <div>
+      <a routerLink="/employees" class="back-link">
+        ← Back to Employees
+      </a>
+
+      <h1>Edit Employee</h1>
+      <p>Update employee information and employment details.</p>
+    </div>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-state">
+    Loading employee details...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-state">
+    {{ errorMessage }}
+
+    <button type="button" (click)="loadEmployee()">
+      Retry
+    </button>
+  </div>
+
+  <div *ngIf="employee && !isLoading" class="form-card">
+
+    <div *ngIf="successMessage" class="success-state">
+      {{ successMessage }}
+    </div>
+
+    <div *ngIf="formErrorMessage" class="error-state">
+      {{ formErrorMessage }}
+    </div>
+
+    <form
+      #employeeForm="ngForm"
+      (ngSubmit)="onUpdateEmployee()"
+      novalidate
+    >
+
+      <div class="form-section">
+        <h2>Personal Information</h2>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="employeeCode">Employee Code *</label>
+
+            <input
+              id="employeeCode"
+              name="employeeCode"
+              type="text"
+              [(ngModel)]="employee.employeeCode"
+              #employeeCode="ngModel"
+              required
+              maxlength="20"
+              [class.invalid]="employeeCode.invalid && employeeCode.touched"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="employeeCode.invalid && employeeCode.touched"
+            >
+              Employee code is required (maximum 20 characters).
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              [(ngModel)]="employee.firstName"
+              #firstName="ngModel"
+              required
+              maxlength="100"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="firstName.invalid && firstName.touched"
+            >
+              First name is required (maximum 100 characters).
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              [(ngModel)]="employee.lastName"
+              #lastName="ngModel"
+              required
+              maxlength="100"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="lastName.invalid && lastName.touched"
+            >
+              Last name is required (maximum 100 characters).
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address *</label>
+
+            <input
+              id="email"
+              name="email"
+              type="email"
+              [(ngModel)]="employee.email"
+              #email="ngModel"
+              required
+              email
+              maxlength="254"
+            />
+
+            <small
+              class="field-error"
+              *ngIf="email.invalid && email.touched"
+            >
+              Enter a valid email address.
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+
+            <input
+              id="phone"
+              name="phone"
+              type="text"
+              [(ngModel)]="employee.phone"
+              maxlength="30"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h2>Employment Information</h2>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label for="department">Department</label>
+
+            <input
+              id="department"
+              name="department"
+              type="text"
+              [(ngModel)]="employee.department"
+              maxlength="100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="jobTitle">Job Title</label>
+
+            <input
+              id="jobTitle"
+              name="jobTitle"
+              type="text"
+              [(ngModel)]="employee.jobTitle"
+              maxlength="100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="salary">Salary</label>
+
+            <input
+              id="salary"
+              name="salary"
+              type="number"
+              [(ngModel)]="employee.salary"
+              min="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="hireDate">Hire Date</label>
+
+            <input
+              id="hireDate"
+              name="hireDate"
+              type="date"
+              [(ngModel)]="employee.hireDate"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="employmentStatus">Employment Status *</label>
+
+            <select
+              id="employmentStatus"
+              name="employmentStatus"
+              [(ngModel)]="employee.employmentStatus"
+              #employmentStatus="ngModel"
+              required
+            >
+              <option value="ACTIVE">Active</option>
+              <option value="INACTIVE">Inactive</option>
+              <option value="ON_LEAVE">On Leave</option>
+            </select>
+
+            <small
+              class="field-error"
+              *ngIf="employmentStatus.invalid && employmentStatus.touched"
+            >
+              Employment status is required.
+            </small>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="onCancel()"
+          [disabled]="isSaving"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn-primary"
+          [disabled]="employeeForm.invalid || isSaving"
+        >
+          {{ isSaving ? 'Updating...' : 'Update Employee' }}
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

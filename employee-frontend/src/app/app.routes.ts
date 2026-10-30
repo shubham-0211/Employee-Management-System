@@ -12,6 +12,20 @@ export const routes: Routes = [
       import('./employees/employees').then((m) => m.Employees),
   },
   {
+    path: 'employees/directory',
+    loadComponent: () =>
+      import('./employees/employee-list/employee-list').then(
+        (m) => m.EmployeeList
+      ),
+  },
+  {
+    path: 'employees/:id/edit',
+    loadComponent: () =>
+      import('./employees/employee-edit/employee-edit').then(
+        (m) => m.EmployeeEdit
+      ),
+  },
+  {
     path: 'employees/:id',
     loadComponent: () =>
       import('./employees/employee-details/employee-details').then(
@@ -22,8 +36,8 @@ export const routes: Routes = [
     path: 'employees',
     pathMatch: 'full',
     loadComponent: () =>
-      import('./employees/employee-list/employee-list').then(
-        (m) => m.EmployeeList
+      import('./employees/employee-dashboard').then(
+        (m) => m.EmployeeDashboard
       ),
   },
   {

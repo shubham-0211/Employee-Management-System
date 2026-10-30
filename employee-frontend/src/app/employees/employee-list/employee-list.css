@@ -36,6 +36,18 @@
   background: #1d4ed8;
 }
 
+/* Delete success notification */
+.success-message {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .employee-summary {
   margin-bottom: 24px;
 }

@@ -21,19 +21,69 @@
   color: #64748b;
 }
 
-.back-button {
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.edit-button,
+.back-button,
+.delete-button {
   display: inline-block;
   padding: 10px 16px;
-  border: 1px solid #2563eb;
   border-radius: 6px;
-  color: #2563eb;
   text-decoration: none;
   font-weight: 600;
+  transition: background 0.2s, color 0.2s;
+}
+
+.edit-button {
+  color: #ffffff;
+  background: #2563eb;
+  border: 1px solid #2563eb;
+}
+
+.edit-button:hover {
+  background: #1d4ed8;
+}
+
+.delete-button {
+  color: #ffffff;
+  background: #dc2626;
+  border: 1px solid #dc2626;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  background: #b91c1c;
+}
+
+.delete-button:disabled {
+  background: #fca5a5;
+  border-color: #fca5a5;
+  cursor: not-allowed;
+}
+
+.back-button {
+  border: 1px solid #2563eb;
+  color: #2563eb;
 }
 
 .back-button:hover {
   background: #2563eb;
   color: #ffffff;
+}
+
+.success-message {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  color: #166534;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .details-card {
@@ -149,6 +199,10 @@
     flex-direction: column;
   }
 
+  .header-actions {
+    flex-wrap: wrap;
+  }
+
   .details-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -166,5 +220,15 @@
   .employee-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions a,
+  .header-actions button {
+    flex: 1;
+    text-align: center;
   }
 }

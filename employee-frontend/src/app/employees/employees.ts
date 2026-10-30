@@ -136,4 +136,8 @@ export class Employees implements OnInit {
 
     this.router.navigate(['/employees']);
   }
+
+  onAddEmployee(): void {
+    this.router.navigate(['/employees/new']);
+  }
 }

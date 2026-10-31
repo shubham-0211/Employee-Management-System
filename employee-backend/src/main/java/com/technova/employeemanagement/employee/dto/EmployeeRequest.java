@@ -1,6 +1,8 @@
+
 package com.technova.employeemanagement.employee.dto;
 
 import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -39,8 +41,13 @@ public class EmployeeRequest {
     @PastOrPresent
     private LocalDate hireDate;
 
+    private LocalDate terminationDate;
+
+    @Size(max = 500)
+    private String exitReason;
+
     @NotBlank
-    @Pattern(regexp = "ACTIVE|INACTIVE|ON_LEAVE")
+    @Pattern(regexp = "ACTIVE|INACTIVE|ON_LEAVE|TERMINATED")
     private String employmentStatus = "ACTIVE";
 
     public String getEmployeeCode() {
@@ -113,6 +120,22 @@ public class EmployeeRequest {
 
     public void setHireDate(LocalDate hireDate) {
         this.hireDate = hireDate;
+    }
+
+    public LocalDate getTerminationDate() {
+        return terminationDate;
+    }
+
+    public void setTerminationDate(LocalDate terminationDate) {
+        this.terminationDate = terminationDate;
+    }
+
+    public String getExitReason() {
+        return exitReason;
+    }
+
+    public void setExitReason(String exitReason) {
+        this.exitReason = exitReason;
     }
 
     public String getEmploymentStatus() {

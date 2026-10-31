@@ -1,3 +1,4 @@
+
 <div class="edit-employee-page">
 
   <div class="page-header">
@@ -46,7 +47,6 @@
 
           <div class="form-group">
             <label for="employeeCode">Employee Code *</label>
-
             <input
               id="employeeCode"
               name="employeeCode"
@@ -57,18 +57,14 @@
               maxlength="20"
               [class.invalid]="employeeCode.invalid && employeeCode.touched"
             />
-
-            <small
-              class="field-error"
-              *ngIf="employeeCode.invalid && employeeCode.touched"
-            >
+            <small class="field-error"
+              *ngIf="employeeCode.invalid && employeeCode.touched">
               Employee code is required (maximum 20 characters).
             </small>
           </div>
 
           <div class="form-group">
             <label for="firstName">First Name *</label>
-
             <input
               id="firstName"
               name="firstName"
@@ -78,18 +74,14 @@
               required
               maxlength="100"
             />
-
-            <small
-              class="field-error"
-              *ngIf="firstName.invalid && firstName.touched"
-            >
+            <small class="field-error"
+              *ngIf="firstName.invalid && firstName.touched">
               First name is required (maximum 100 characters).
             </small>
           </div>
 
           <div class="form-group">
             <label for="lastName">Last Name *</label>
-
             <input
               id="lastName"
               name="lastName"
@@ -99,18 +91,14 @@
               required
               maxlength="100"
             />
-
-            <small
-              class="field-error"
-              *ngIf="lastName.invalid && lastName.touched"
-            >
+            <small class="field-error"
+              *ngIf="lastName.invalid && lastName.touched">
               Last name is required (maximum 100 characters).
             </small>
           </div>
 
           <div class="form-group">
             <label for="email">Email Address *</label>
-
             <input
               id="email"
               name="email"
@@ -121,18 +109,14 @@
               email
               maxlength="254"
             />
-
-            <small
-              class="field-error"
-              *ngIf="email.invalid && email.touched"
-            >
+            <small class="field-error"
+              *ngIf="email.invalid && email.touched">
               Enter a valid email address.
             </small>
           </div>
 
           <div class="form-group">
             <label for="phone">Phone Number</label>
-
             <input
               id="phone"
               name="phone"
@@ -150,7 +134,6 @@
 
         <div class="form-grid">
 
-          <!-- Department -->
           <div class="form-group">
             <label for="departmentId">Department *</label>
 
@@ -177,10 +160,8 @@
               }
             </select>
 
-            <small
-              class="field-error"
-              *ngIf="departmentId.invalid && departmentId.touched"
-            >
+            <small class="field-error"
+              *ngIf="departmentId.invalid && departmentId.touched">
               Department selection is required.
             </small>
 
@@ -198,7 +179,6 @@
 
           <div class="form-group">
             <label for="jobTitle">Job Title</label>
-
             <input
               id="jobTitle"
               name="jobTitle"
@@ -210,7 +190,6 @@
 
           <div class="form-group">
             <label for="salary">Salary</label>
-
             <input
               id="salary"
               name="salary"
@@ -223,7 +202,6 @@
 
           <div class="form-group">
             <label for="hireDate">Hire Date</label>
-
             <input
               id="hireDate"
               name="hireDate"
@@ -241,10 +219,12 @@
               [(ngModel)]="employee.employmentStatus"
               #employmentStatus="ngModel"
               required
+              [disabled]="employee.employmentStatus === 'TERMINATED'"
             >
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
               <option value="ON_LEAVE">On Leave</option>
+              <option value="TERMINATED">Terminated</option>
             </select>
 
             <small
@@ -253,9 +233,70 @@
             >
               Employment status is required.
             </small>
+
+            <small
+              *ngIf="employee.employmentStatus === 'TERMINATED'"
+              class="field-hint"
+            >
+              A terminated employee cannot be reactivated through this form.
+            </small>
           </div>
 
         </div>
+
+        @if (employee.employmentStatus === 'TERMINATED') {
+          <div class="form-section termination-section">
+            <h2>Termination Information</h2>
+
+            <div class="form-grid">
+
+              <div class="form-group">
+                <label for="terminationDate">Termination Date *</label>
+
+                <input
+                  id="terminationDate"
+                  name="terminationDate"
+                  type="date"
+                  [(ngModel)]="employee.terminationDate"
+                  #terminationDate="ngModel"
+                  required
+                  [min]="employee.hireDate || null"
+                  [max]="getMaxTerminationDate()"
+                />
+
+                <small
+                  class="field-error"
+                  *ngIf="terminationDate.invalid && terminationDate.touched"
+                >
+                  Termination date is required and must be valid.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="exitReason">Exit Reason *</label>
+
+                <textarea
+                  id="exitReason"
+                  name="exitReason"
+                  [(ngModel)]="employee.exitReason"
+                  #exitReason="ngModel"
+                  required
+                  maxlength="500"
+                  rows="4"
+                ></textarea>
+
+                <small
+                  class="field-error"
+                  *ngIf="exitReason.invalid && exitReason.touched"
+                >
+                  Exit reason is required (maximum 500 characters).
+                </small>
+              </div>
+
+            </div>
+          </div>
+        }
+
       </div>
 
       <div class="form-actions">

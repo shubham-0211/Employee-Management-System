@@ -1,3 +1,4 @@
+
 import {
   Component,
   OnInit,
@@ -55,7 +56,15 @@ export class EmployeeEdit implements OnInit {
     this.loadEmployee();
   }
 
-  // Load departments for the department dropdown
+  getMaxTerminationDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
   loadDepartments(): void {
     this.isLoadingDepartments = true;
     this.departmentErrorMessage = '';
@@ -117,6 +126,66 @@ export class EmployeeEdit implements OnInit {
       return;
     }
 
+    if (
+      this.employee.employmentStatus !== 'TERMINATED' &&
+      this.employee.employmentStatus !== 'ACTIVE' &&
+      this.employee.employmentStatus !== 'INACTIVE' &&
+      this.employee.employmentStatus !== 'ON_LEAVE'
+    ) {
+      this.formErrorMessage = 'Please select a valid employment status.';
+      return;
+    }
+
+    if (
+      this.employee.employmentStatus === 'TERMINATED' &&
+      !this.employee.terminationDate
+    ) {
+      this.formErrorMessage =
+        'Termination date is required for terminated employees.';
+      return;
+    }
+
+    if (
+      this.employee.employmentStatus === 'TERMINATED' &&
+      !this.employee.exitReason?.trim()
+    ) {
+      this.formErrorMessage =
+        'Exit reason is required for terminated employees.';
+      return;
+    }
+
+    if (
+      this.employee.employmentStatus === 'TERMINATED' &&
+      this.employee.terminationDate &&
+      this.employee.terminationDate > this.getMaxTerminationDate()
+    ) {
+      this.formErrorMessage =
+        'Termination date cannot be in the future.';
+      return;
+    }
+
+    if (
+      this.employee.employmentStatus === 'TERMINATED' &&
+      this.employee.terminationDate &&
+      this.employee.hireDate &&
+      this.employee.terminationDate < this.employee.hireDate
+    ) {
+      this.formErrorMessage =
+        'Termination date cannot be before the hire date.';
+      return;
+    }
+
+    if (this.employee.employmentStatus !== 'TERMINATED') {
+      if (
+        this.employee.terminationDate ||
+        this.employee.exitReason?.trim()
+      ) {
+        this.formErrorMessage =
+          'Termination details are allowed only for terminated employees.';
+        return;
+      }
+    }
+
     const updatedEmployee: Employee = {
       ...this.employee,
       employeeCode: this.employee.employeeCode.trim(),
@@ -124,6 +193,8 @@ export class EmployeeEdit implements OnInit {
       lastName: this.employee.lastName.trim(),
       email: this.employee.email.trim(),
       departmentId: Number(this.employee.departmentId),
+      terminationDate: this.employee.terminationDate || null,
+      exitReason: this.employee.exitReason?.trim() || null,
     };
 
     this.isSaving = true;

@@ -1,3 +1,4 @@
+
 package com.technova.employeemanagement.employee;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,6 +44,12 @@ public class Employee {
 
     @Column(name = "hire_date")
     private LocalDate hireDate;
+
+    @Column(name = "termination_date")
+    private LocalDate terminationDate;
+
+    @Column(name = "exit_reason", length = 500)
+    private String exitReason;
 
     @Column(name = "employment_status", nullable = false, length = 20)
     private String employmentStatus = "ACTIVE";
@@ -138,6 +145,22 @@ public class Employee {
 
     public void setHireDate(LocalDate hireDate) {
         this.hireDate = hireDate;
+    }
+
+    public LocalDate getTerminationDate() {
+        return terminationDate;
+    }
+
+    public void setTerminationDate(LocalDate terminationDate) {
+        this.terminationDate = terminationDate;
+    }
+
+    public String getExitReason() {
+        return exitReason;
+    }
+
+    public void setExitReason(String exitReason) {
+        this.exitReason = exitReason;
     }
 
     public String getEmploymentStatus() {

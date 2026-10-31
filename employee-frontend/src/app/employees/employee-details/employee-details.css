@@ -1,6 +1,9 @@
+
 .employee-details-page {
   padding: 28px;
 }
+
+/* Page Header */
 
 .page-header {
   display: flex;
@@ -35,7 +38,7 @@
   border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
-  transition: background 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 .edit-button {
@@ -75,6 +78,8 @@
   color: #ffffff;
 }
 
+/* Success Notification */
+
 .success-message {
   margin-bottom: 20px;
   padding: 14px 18px;
@@ -85,6 +90,8 @@
   font-size: 14px;
   font-weight: 600;
 }
+
+/* Employee Details Card */
 
 .details-card {
   padding: 26px;
@@ -113,6 +120,8 @@
   color: #64748b;
 }
 
+/* Employee Status */
+
 .status-badge {
   padding: 7px 13px;
   border-radius: 20px;
@@ -132,6 +141,13 @@
   background: #fef3c7;
   color: #92400e;
 }
+
+.status-badge.terminated {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+/* Details Sections */
 
 .details-section {
   padding-top: 24px;
@@ -153,6 +169,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .detail-item label {
@@ -166,6 +183,8 @@
   font-weight: 500;
   overflow-wrap: anywhere;
 }
+
+/* Loading, Empty and Error States */
 
 .message,
 .error-message {
@@ -188,6 +207,8 @@
   padding: 7px 12px;
   cursor: pointer;
 }
+
+/* Responsive Layout */
 
 @media (max-width: 768px) {
   .employee-details-page {

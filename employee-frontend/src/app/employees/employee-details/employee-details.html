@@ -1,3 +1,4 @@
+
 <div class="employee-details-page">
 
   <div class="page-header">
@@ -59,7 +60,9 @@
         class="status-badge"
         [ngClass]="emp.employmentStatus.toLowerCase()"
       >
-        {{ emp.employmentStatus }}
+        {{ emp.employmentStatus === 'ON_LEAVE'
+          ? 'ON LEAVE'
+          : emp.employmentStatus }}
       </span>
     </div>
 
@@ -122,7 +125,9 @@
 
         <div class="detail-item">
           <label>Hire Date</label>
-          <span>{{ emp.hireDate || '-' }}</span>
+          <span>
+            {{ emp.hireDate ? (emp.hireDate | date:'dd MMM yyyy') : '-' }}
+          </span>
         </div>
 
         <div class="detail-item">
@@ -131,6 +136,30 @@
         </div>
       </div>
     </div>
+
+    @if (emp.employmentStatus === 'TERMINATED') {
+      <div class="details-section termination-details">
+        <h3>Termination Information</h3>
+
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Termination Date</label>
+            <span>
+              {{ emp.terminationDate
+                ? (emp.terminationDate | date:'dd MMM yyyy')
+                : '-' }}
+            </span>
+          </div>
+
+          <div class="detail-item">
+            <label>Exit Reason</label>
+            <span class="exit-reason">
+              {{ emp.exitReason || '-' }}
+            </span>
+          </div>
+        </div>
+      </div>
+    }
 
   </div>
 

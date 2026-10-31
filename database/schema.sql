@@ -1,7 +1,7 @@
 ﻿
 -- =====================================================
 -- Employee Management System
--- Database Schema: v1.4.0
+-- Database Schema: v1.5.0
 -- =====================================================
 
 -- =====================================================
@@ -37,6 +37,8 @@ CREATE TABLE IF NOT EXISTS employees (
     job_title VARCHAR(100),
     salary DECIMAL(12,2),
     hire_date DATE,
+    termination_date DATE NULL,
+    exit_reason VARCHAR(500) NULL,
     employment_status VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -47,6 +49,7 @@ CREATE TABLE IF NOT EXISTS employees (
     UNIQUE KEY uk_employees_email (email),
 
     KEY idx_employees_department_id (department_id),
+    KEY idx_employees_employment_status (employment_status),
 
     CONSTRAINT fk_employees_department
         FOREIGN KEY (department_id)

@@ -1,3 +1,4 @@
+
 export interface Employee {
   id?: number;
   employeeCode: string;
@@ -11,4 +12,6 @@ export interface Employee {
   salary?: number;
   hireDate?: string;
   employmentStatus: string;
+  terminationDate?: string | null;
+  exitReason?: string | null;
 }

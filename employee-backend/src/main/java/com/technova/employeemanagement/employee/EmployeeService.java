@@ -1,3 +1,4 @@
+
 package com.technova.employeemanagement.employee;
 
 import com.technova.employeemanagement.department.Department;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -62,6 +64,8 @@ public class EmployeeService {
     @Transactional
     public Employee create(EmployeeRequest request) {
 
+        validateLifecycle(request);
+
         if (repository.existsByEmployeeCode(request.getEmployeeCode().trim())) {
             throw new DuplicateEmployeeException(
                     "Employee code already exists"
@@ -85,6 +89,16 @@ public class EmployeeService {
     public Employee update(Long id, EmployeeRequest request) {
 
         Employee employee = findById(id);
+
+        if ("TERMINATED".equals(employee.getEmploymentStatus())
+                && !"TERMINATED".equals(request.getEmploymentStatus())) {
+
+            throw new IllegalStateException(
+                    "A terminated employee cannot be reactivated."
+            );
+        }
+
+        validateLifecycle(request);
 
         if (repository.existsByEmployeeCodeAndIdNot(
                 request.getEmployeeCode().trim(), id)) {
@@ -113,6 +127,50 @@ public class EmployeeService {
         Employee employee = findById(id);
 
         repository.delete(employee);
+    }
+
+    private void validateLifecycle(EmployeeRequest request) {
+
+        String status = request.getEmploymentStatus();
+
+        LocalDate terminationDate = request.getTerminationDate();
+        String exitReason = request.getExitReason();
+
+        if ("TERMINATED".equals(status)) {
+
+            if (terminationDate == null) {
+                throw new IllegalArgumentException(
+                        "Termination date is required for terminated employees."
+                );
+            }
+
+            if (exitReason == null || exitReason.isBlank()) {
+                throw new IllegalArgumentException(
+                        "Exit reason is required for terminated employees."
+                );
+            }
+
+            if (terminationDate.isAfter(LocalDate.now())) {
+                throw new IllegalArgumentException(
+                        "Termination date cannot be in the future."
+                );
+            }
+
+            if (request.getHireDate() != null
+                    && terminationDate.isBefore(request.getHireDate())) {
+
+                throw new IllegalArgumentException(
+                        "Termination date cannot be before the hire date."
+                );
+            }
+
+        } else if (terminationDate != null
+                || (exitReason != null && !exitReason.isBlank())) {
+
+            throw new IllegalArgumentException(
+                    "Termination details are allowed only for terminated employees."
+            );
+        }
     }
 
     private void applyRequest(
@@ -146,6 +204,14 @@ public class EmployeeService {
         employee.setSalary(request.getSalary());
 
         employee.setHireDate(request.getHireDate());
+
+        employee.setTerminationDate(request.getTerminationDate());
+
+        employee.setExitReason(
+                request.getExitReason() != null
+                        ? request.getExitReason().trim()
+                        : null
+        );
 
         employee.setEmploymentStatus(
                 request.getEmploymentStatus()

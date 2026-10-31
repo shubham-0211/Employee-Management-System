@@ -1,7 +1,10 @@
+
 .employee-name {
   color: #172033;
   font-weight: 600;
 }
+
+/* Employee Status */
 
 .status-badge {
   display: inline-block;
@@ -16,6 +19,16 @@
 .status-badge.inactive {
   background: #fff0ed;
   color: #c24135;
+}
+
+.status-badge.on_leave {
+  background: #fff7d6;
+  color: #92400e;
+}
+
+.status-badge.terminated {
+  background: #e2e8f0;
+  color: #334155;
 }
 
 /* Employee Creation Form */
@@ -47,7 +60,8 @@
 }
 
 .form-group input,
-.form-group select {
+.form-group select,
+.form-group textarea {
   width: 100%;
   min-height: 42px;
   padding: 10px 12px;
@@ -62,13 +76,20 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
 .form-group input:focus,
-.form-group select:focus {
+.form-group select:focus,
+.form-group textarea:focus {
   border-color: #3975d7;
   box-shadow: 0 0 0 3px rgba(57, 117, 215, 0.12);
 }
 
-.form-group input::placeholder {
+.form-group input::placeholder,
+.form-group textarea::placeholder {
   color: #98a2b3;
 }
 
@@ -118,22 +139,7 @@
   text-align: center;
 }
 
-/* Responsive Layout */
-
-@media (max-width: 768px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  .form-actions {
-    flex-direction: column-reverse;
-  }
-
-  .form-actions button {
-    width: 100%;
-  }
-}
+/* Success State */
 
 .success-state {
   display: flex;
@@ -163,6 +169,7 @@
   font-size: 13px;
 }
 
+/* Validation Messages */
 
 .field-error {
   display: block;
@@ -173,6 +180,24 @@
 }
 
 .form-group input.ng-invalid.ng-touched,
-.form-group select.ng-invalid.ng-touched {
+.form-group select.ng-invalid.ng-touched,
+.form-group textarea.ng-invalid.ng-touched {
   border-color: #dc2626;
+}
+
+/* Responsive Layout */
+
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
 }

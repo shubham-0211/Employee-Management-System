@@ -1,6 +1,6 @@
+
 <div class="employee-list-page">
 
-  <!-- Page Header -->
   <div class="page-header">
     <div>
       <h1>Employee Directory</h1>
@@ -12,12 +12,10 @@
     </a>
   </div>
 
-  <!-- Delete Success Notification -->
   <div *ngIf="successMessage" class="success-message">
     {{ successMessage }}
   </div>
 
-  <!-- Employee Summary -->
   <div class="employee-summary">
     <div class="summary-card">
       <span>Total Employees</span>
@@ -30,12 +28,10 @@
     </div>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-message">
     Loading employees...
   </div>
 
-  <!-- Error State -->
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
 
@@ -46,7 +42,6 @@
 
   <ng-container *ngIf="!isLoading && !errorMessage">
 
-    <!-- Search and Filters -->
     <div *ngIf="employees.length > 0" class="filter-section">
 
       <div class="search-box">
@@ -91,6 +86,8 @@
           <option value="ALL">All Statuses</option>
           <option value="ACTIVE">Active</option>
           <option value="INACTIVE">Inactive</option>
+          <option value="ON_LEAVE">On Leave</option>
+          <option value="TERMINATED">Terminated</option>
         </select>
       </div>
 
@@ -104,7 +101,6 @@
 
     </div>
 
-    <!-- No Employees -->
     <div *ngIf="employees.length === 0" class="empty-message">
       <h3>No employees found</h3>
       <p>Start by adding your first employee.</p>
@@ -114,7 +110,6 @@
       </a>
     </div>
 
-    <!-- No Search Results -->
     <div
       *ngIf="employees.length > 0 && filteredEmployees.length === 0"
       class="empty-message"
@@ -131,7 +126,6 @@
       </button>
     </div>
 
-    <!-- Employee Table -->
     <div
       *ngIf="filteredEmployees.length > 0"
       class="table-container"
@@ -169,7 +163,9 @@
                 class="status-badge"
                 [ngClass]="employee.employmentStatus.toLowerCase()"
               >
-                {{ employee.employmentStatus }}
+                {{ employee.employmentStatus === 'ON_LEAVE'
+                  ? 'ON LEAVE'
+                  : employee.employmentStatus }}
               </span>
             </td>
 
@@ -187,7 +183,6 @@
       </table>
     </div>
 
-    <!-- Pagination -->
     <div
       *ngIf="filteredEmployees.length > 0"
       class="pagination-section"

@@ -1,3 +1,4 @@
+
 <section class="employees-page">
   <div class="page-heading">
     <div>
@@ -32,10 +33,8 @@
       <form #employeeForm="ngForm" (ngSubmit)="onSaveEmployee()">
         <div class="form-grid">
 
-          <!-- Employee Code -->
           <div class="form-group">
             <label for="employeeCode">Employee Code *</label>
-
             <input
               id="employeeCode"
               type="text"
@@ -59,10 +58,8 @@
             }
           </div>
 
-          <!-- First Name -->
           <div class="form-group">
             <label for="firstName">First Name *</label>
-
             <input
               id="firstName"
               type="text"
@@ -86,10 +83,8 @@
             }
           </div>
 
-          <!-- Last Name -->
           <div class="form-group">
             <label for="lastName">Last Name *</label>
-
             <input
               id="lastName"
               type="text"
@@ -113,10 +108,8 @@
             }
           </div>
 
-          <!-- Email -->
           <div class="form-group">
             <label for="email">Email Address *</label>
-
             <input
               id="email"
               type="email"
@@ -144,10 +137,8 @@
             }
           </div>
 
-          <!-- Phone -->
           <div class="form-group">
             <label for="phone">Phone Number</label>
-
             <input
               id="phone"
               type="tel"
@@ -158,10 +149,8 @@
             />
           </div>
 
-          <!-- Department -->
           <div class="form-group">
             <label for="departmentId">Department *</label>
-
             <select
               id="departmentId"
               name="departmentId"
@@ -204,10 +193,8 @@
             }
           </div>
 
-          <!-- Job Title -->
           <div class="form-group">
             <label for="jobTitle">Job Title</label>
-
             <input
               id="jobTitle"
               type="text"
@@ -218,10 +205,8 @@
             />
           </div>
 
-          <!-- Salary -->
           <div class="form-group">
             <label for="salary">Salary</label>
-
             <input
               id="salary"
               type="number"
@@ -233,10 +218,8 @@
             />
           </div>
 
-          <!-- Hire Date -->
           <div class="form-group">
             <label for="hireDate">Hire Date</label>
-
             <input
               id="hireDate"
               type="date"
@@ -245,10 +228,8 @@
             />
           </div>
 
-          <!-- Employment Status -->
           <div class="form-group">
             <label for="employmentStatus">Employment Status *</label>
-
             <select
               id="employmentStatus"
               name="employmentStatus"
@@ -259,6 +240,7 @@
               <option value="ACTIVE">Active</option>
               <option value="INACTIVE">Inactive</option>
               <option value="ON_LEAVE">On Leave</option>
+              <option value="TERMINATED">Terminated</option>
             </select>
 
             @if (employmentStatus.invalid && employmentStatus.touched) {
@@ -268,6 +250,35 @@
             }
           </div>
 
+          @if (newEmployee.employmentStatus === 'TERMINATED') {
+            <div class="form-group">
+              <label for="terminationDate">Termination Date *</label>
+              <input
+                id="terminationDate"
+                type="date"
+                name="terminationDate"
+                [(ngModel)]="newEmployee.terminationDate"
+                [max]="newEmployee.hireDate ? (newEmployee.hireDate > '' ? getMaxTerminationDate() : getMaxTerminationDate()) : getMaxTerminationDate()"
+                required
+              />
+              <small class="field-hint">
+                Must not be before the hire date or later than today.
+              </small>
+            </div>
+
+            <div class="form-group">
+              <label for="exitReason">Exit Reason *</label>
+              <textarea
+                id="exitReason"
+                name="exitReason"
+                [(ngModel)]="newEmployee.exitReason"
+                required
+                maxlength="500"
+                rows="3"
+                placeholder="Enter the reason for employee termination"
+              ></textarea>
+            </div>
+          }
         </div>
 
         @if (formErrorMessage) {

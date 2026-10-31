@@ -1,3 +1,4 @@
+
 import {
   Component,
   OnInit,
@@ -65,10 +66,20 @@ export class Employees implements OnInit {
       salary: undefined,
       hireDate: '',
       employmentStatus: 'ACTIVE',
+      terminationDate: null,
+      exitReason: null,
     };
   }
 
-  // Load active departments for the department dropdown
+  getMaxTerminationDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
   loadDepartments(): void {
     this.isLoadingDepartments = true;
     this.departmentErrorMessage = '';
@@ -129,6 +140,38 @@ export class Employees implements OnInit {
       return;
     }
 
+    if (this.newEmployee.employmentStatus === 'TERMINATED') {
+      if (!this.newEmployee.terminationDate) {
+        this.formErrorMessage =
+          'Termination date is required for terminated employees.';
+        return;
+      }
+
+      if (!this.newEmployee.exitReason?.trim()) {
+        this.formErrorMessage =
+          'Exit reason is required for terminated employees.';
+        return;
+      }
+
+      if (this.newEmployee.terminationDate > this.getMaxTerminationDate()) {
+        this.formErrorMessage =
+          'Termination date cannot be in the future.';
+        return;
+      }
+
+      if (
+        this.newEmployee.hireDate &&
+        this.newEmployee.terminationDate < this.newEmployee.hireDate
+      ) {
+        this.formErrorMessage =
+          'Termination date cannot be before the hire date.';
+        return;
+      }
+    } else {
+      this.newEmployee.terminationDate = null;
+      this.newEmployee.exitReason = null;
+    }
+
     const employee: Employee = {
       ...this.newEmployee,
       employeeCode: this.newEmployee.employeeCode.trim(),
@@ -136,6 +179,8 @@ export class Employees implements OnInit {
       lastName: this.newEmployee.lastName.trim(),
       email: this.newEmployee.email.trim(),
       departmentId: Number(this.newEmployee.departmentId),
+      terminationDate: this.newEmployee.terminationDate || null,
+      exitReason: this.newEmployee.exitReason?.trim() || null,
     };
 
     this.isSaving = true;

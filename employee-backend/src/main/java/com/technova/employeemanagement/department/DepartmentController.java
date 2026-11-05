@@ -2,10 +2,9 @@ package com.technova.employeemanagement.department;
 
 import com.technova.employeemanagement.department.dto.DepartmentRequest;
 import com.technova.employeemanagement.department.dto.DepartmentResponse;
-
 import jakarta.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -22,16 +21,19 @@ public class DepartmentController {
     }
 
     @GetMapping
+    @PreAuthorize("@employeeAuthorizationService.hasAdminOrHrRole()")
     public List<DepartmentResponse> getAllDepartments() {
         return service.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("@employeeAuthorizationService.hasAdminOrHrRole()")
     public DepartmentResponse getDepartment(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping
+    @PreAuthorize("@employeeAuthorizationService.isAdmin()")
     public ResponseEntity<DepartmentResponse> createDepartment(
             @Valid @RequestBody DepartmentRequest request) {
 
@@ -43,6 +45,7 @@ public class DepartmentController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("@employeeAuthorizationService.isAdmin()")
     public DepartmentResponse updateDepartment(
             @PathVariable Long id,
             @Valid @RequestBody DepartmentRequest request) {
@@ -51,6 +54,7 @@ public class DepartmentController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("@employeeAuthorizationService.isAdmin()")
     public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
 
         service.delete(id);

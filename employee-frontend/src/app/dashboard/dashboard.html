@@ -1,23 +1,20 @@
 <div class="dashboard-page">
 
-  <!-- Welcome Header -->
   <div class="welcome-header">
     <div>
       <h1>HR Management Overview</h1>
       <p>Welcome to your Workforce Administration Portal.</p>
     </div>
 
-    <a routerLink="/employees" class="primary-button">
+    <a routerLink="/employees/directory" class="primary-button">
       Employee Management
     </a>
   </div>
 
-  <!-- Loading State -->
   <div *ngIf="isLoading" class="message">
     Loading HR dashboard...
   </div>
 
-  <!-- Error State -->
   <div *ngIf="errorMessage" class="error-message">
     {{ errorMessage }}
 
@@ -28,7 +25,6 @@
 
   <ng-container *ngIf="!isLoading && !errorMessage">
 
-    <!-- Workforce Statistics -->
     <section class="statistics-grid">
 
       <div class="stat-card">
@@ -69,7 +65,6 @@
 
     </section>
 
-    <!-- Management Modules -->
     <section class="modules-section">
 
       <div class="section-heading">
@@ -79,8 +74,7 @@
 
       <div class="modules-grid">
 
-        <!-- Employee Management -->
-        <a routerLink="/employees" class="module-card">
+        <a routerLink="/employees/directory" class="module-card">
           <div class="module-icon employees-module-icon">
             <span>👥</span>
           </div>
@@ -95,7 +89,6 @@
           <span class="module-arrow">→</span>
         </a>
 
-        <!-- Department Management -->
         <a routerLink="/departments" class="module-card">
           <div class="module-icon departments-module-icon">
             <span>🏢</span>
@@ -111,7 +104,6 @@
           <span class="module-arrow">→</span>
         </a>
 
-        <!-- Attendance Management -->
         <div class="module-card planned-module">
           <div class="module-icon attendance-module-icon">
             <span>📅</span>
@@ -127,7 +119,6 @@
           <span class="module-status">Planned</span>
         </div>
 
-        <!-- Leave Management -->
         <div class="module-card planned-module">
           <div class="module-icon leave-module-icon">
             <span>📝</span>
@@ -143,7 +134,6 @@
           <span class="module-status">Planned</span>
         </div>
 
-        <!-- Payroll Management -->
         <div class="module-card planned-module">
           <div class="module-icon payroll-module-icon">
             <span>💰</span>
@@ -159,7 +149,6 @@
           <span class="module-status">Planned</span>
         </div>
 
-        <!-- Reports -->
         <div class="module-card planned-module">
           <div class="module-icon reports-module-icon">
             <span>📊</span>
@@ -179,7 +168,6 @@
 
     </section>
 
-    <!-- Quick Access -->
     <section class="quick-access-section">
 
       <div>
@@ -193,7 +181,10 @@
           + Add New Employee
         </a>
 
-        <a routerLink="/employees/directory" class="quick-action-button secondary-button">
+        <a
+          routerLink="/employees/directory"
+          class="quick-action-button secondary-button"
+        >
           View Employee Directory
         </a>
 

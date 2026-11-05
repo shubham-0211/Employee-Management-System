@@ -1,0 +1,364 @@
+<div class="user-management-page">
+
+  <div class="page-header">
+    <div>
+      <h1>User Management</h1>
+      <p>Create and manage system user accounts and access.</p>
+    </div>
+  </div>
+
+  @if (successMessage) {
+    <div class="success-message" role="status">
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-message" role="alert">
+      {{ errorMessage }}
+    </div>
+  }
+
+  <section class="user-summary">
+    <div class="summary-card">
+      <span>Total Accounts</span>
+      <h2>{{ users.length }}</h2>
+    </div>
+
+    <div class="summary-card">
+      <span>Active Accounts</span>
+      <h2>{{ activeUsers }}</h2>
+    </div>
+
+    <div class="summary-card">
+      <span>Inactive Accounts</span>
+      <h2>{{ inactiveUsers }}</h2>
+    </div>
+  </section>
+
+  @if (isLoading) {
+    <div class="loading-message">
+      Loading user management data...
+    </div>
+  } @else if (errorMessage && users.length === 0) {
+    <div class="empty-message">
+      <p>Unable to load user management data.</p>
+      <button type="button" class="secondary-button" (click)="loadData()">
+        Retry
+      </button>
+    </div>
+  } @else {
+
+    <section class="form-section">
+      <div class="section-heading">
+        <div>
+          <h2>Create User Account</h2>
+          <p>Assign an account to an existing active employee.</p>
+        </div>
+      </div>
+
+      @if (availableEmployees.length === 0) {
+        <div class="info-message">
+          No eligible employees are available. Only active employees without
+          an existing user account can be assigned.
+        </div>
+      } @else {
+
+        <form [formGroup]="createUserForm" (ngSubmit)="createUser()">
+
+          <div class="form-grid">
+
+            <div class="form-group">
+              <label for="employeeId">Employee</label>
+              <select id="employeeId" formControlName="employeeId">
+                <option [ngValue]="0">Select Employee</option>
+                @for (employee of availableEmployees; track employee.id) {
+                  <option [ngValue]="employee.id">
+                    {{ employee.employeeCode }} -
+                    {{ employee.firstName }} {{ employee.lastName }}
+                  </option>
+                }
+              </select>
+
+              @if (
+                createUserForm.controls.employeeId.touched &&
+                createUserForm.controls.employeeId.invalid
+              ) {
+                <small class="field-error">Select an employee.</small>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input
+                id="username"
+                type="text"
+                formControlName="username"
+                maxlength="50"
+                placeholder="Enter username"
+                autocomplete="off"
+              />
+
+              @if (
+                createUserForm.controls.username.touched &&
+                createUserForm.controls.username.hasError('required')
+              ) {
+                <small class="field-error">Username is required.</small>
+              }
+
+              @if (
+                createUserForm.controls.username.hasError('minlength')
+              ) {
+                <small class="field-error">
+                  Username must contain at least 3 characters.
+                </small>
+              }
+
+              @if (
+                createUserForm.controls.username.hasError('pattern')
+              ) {
+                <small class="field-error">
+                  Only letters, numbers, dots, underscores and hyphens are allowed.
+                </small>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                maxlength="254"
+                placeholder="Enter email address"
+                autocomplete="off"
+              />
+
+              @if (
+                createUserForm.controls.email.touched &&
+                createUserForm.controls.email.invalid
+              ) {
+                <small class="field-error">
+                  Enter a valid email address.
+                </small>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="role">Account Role</label>
+              <select id="role" formControlName="role">
+                <option value="EMPLOYEE">EMPLOYEE</option>
+                <option value="HR">HR</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label for="password">Temporary Password</label>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                placeholder="Enter temporary password"
+                autocomplete="new-password"
+              />
+
+              @if (
+                createUserForm.controls.password.touched &&
+                createUserForm.controls.password.hasError('required')
+              ) {
+                <small class="field-error">
+                  Temporary password is required.
+                </small>
+              }
+
+              @if (
+                createUserForm.controls.password.hasError('minlength')
+              ) {
+                <small class="field-error">
+                  Password must contain at least 12 characters.
+                </small>
+              }
+
+              <small class="field-hint">
+                Maximum 72 UTF-8 bytes. The user must change this password
+                during the first login.
+              </small>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" [disabled]="isCreating">
+              {{ isCreating ? 'Creating Account...' : 'Create Account' }}
+            </button>
+          </div>
+
+        </form>
+      }
+    </section>
+
+    <section class="accounts-section">
+
+      <div class="section-heading">
+        <div>
+          <h2>System User Accounts</h2>
+          <p>View account details and manage access permissions.</p>
+        </div>
+      </div>
+
+      @if (users.length === 0) {
+        <div class="empty-message">
+          <h3>No user accounts found</h3>
+          <p>Create an account using the form above.</p>
+        </div>
+      } @else {
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Employee</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (user of users; track user.id) {
+                <tr>
+                  <td class="username-cell">
+                    {{ user.username }}
+                    @if (user.id === currentUserId) {
+                      <span class="you-badge">You</span>
+                    }
+                  </td>
+
+                  <td>{{ getEmployeeName(user.employeeId) }}</td>
+
+                  <td>{{ user.email }}</td>
+
+                  <td>
+                    <span class="role-badge" [ngClass]="user.role.toLowerCase()">
+                      {{ user.role }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <span
+                      class="status-badge"
+                      [ngClass]="user.status.toLowerCase()"
+                    >
+                      {{ user.status }}
+                    </span>
+                  </td>
+
+                  <td>
+                    <div class="action-buttons">
+                      <button
+                        type="button"
+                        class="reset-button"
+                        [disabled]="user.status !== 'ACTIVE'"
+                        (click)="openPasswordReset(user)"
+                      >
+                        Reset Password
+                      </button>
+
+                      <button
+                        type="button"
+                        [class.activate-button]="user.status === 'INACTIVE'"
+                        [class.deactivate-button]="user.status === 'ACTIVE'"
+                        [disabled]="user.id === currentUserId"
+                        (click)="toggleUserStatus(user)"
+                      >
+                        {{ user.status === 'ACTIVE' ? 'Deactivate' : 'Activate' }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  }
+
+  @if (selectedResetUser; as selectedUser) {
+    <div class="modal-backdrop">
+      <div
+        class="reset-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reset-title"
+      >
+        <h2 id="reset-title">Reset User Password</h2>
+
+        <p>
+          Set a temporary password for
+          <strong>{{ selectedUser.username }}</strong>.
+          The user must change it at the next login.
+        </p>
+
+        <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPassword()">
+
+          <div class="form-group">
+            <label for="resetPassword">Temporary Password</label>
+
+            <input
+              id="resetPassword"
+              type="password"
+              formControlName="password"
+              placeholder="Enter new temporary password"
+              autocomplete="new-password"
+            />
+
+            @if (
+              resetPasswordForm.controls.password.touched &&
+              resetPasswordForm.controls.password.hasError('required')
+            ) {
+              <small class="field-error">Password is required.</small>
+            }
+
+            @if (
+              resetPasswordForm.controls.password.hasError('minlength')
+            ) {
+              <small class="field-error">
+                Password must contain at least 12 characters.
+              </small>
+            }
+
+            <small class="field-hint">
+              Maximum 72 UTF-8 bytes.
+            </small>
+          </div>
+
+          @if (errorMessage) {
+            <div class="error-message" role="alert">
+              {{ errorMessage }}
+            </div>
+          }
+
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="secondary-button"
+              [disabled]="isResetting"
+              (click)="cancelPasswordReset()"
+            >
+              Cancel
+            </button>
+
+            <button type="submit" [disabled]="isResetting">
+              {{ isResetting ? 'Resetting...' : 'Reset Password' }}
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  }
+
+</div>

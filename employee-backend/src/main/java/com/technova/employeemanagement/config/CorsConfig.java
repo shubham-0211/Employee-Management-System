@@ -1,3 +1,4 @@
+
 package com.technova.employeemanagement.config;
 
 import org.springframework.context.annotation.Bean;
@@ -16,9 +17,11 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOrigins(List.of("http://localhost:4200"));
+
         config.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
         );
+
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(false);
 

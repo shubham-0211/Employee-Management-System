@@ -1,52 +1,98 @@
-<div class="app-shell">
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-icon">EM</div>
-      <div class="brand-text">
-        <h1>Employee Management</h1>
-        <p>Workforce Administration Portal</p>
+@if (isLoginPage()) {
+  <router-outlet />
+} @else {
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-icon">EM</div>
+        <div class="brand-text">
+          <h1>Employee Management</h1>
+          <p>Workforce Administration Portal</p>
+        </div>
       </div>
-    </div>
 
-    <div class="header-info">
-      <span class="status-dot"></span>
-      <span>System Online</span>
-    </div>
-  </header>
+      <div class="header-actions">
+        @if (currentUser; as user) {
+          <div class="user-info">
+            <span class="user-name">{{ user.username }}</span>
+            <span class="user-role">{{ user.role }}</span>
+          </div>
+        }
 
-  <div class="app-layout">
-    <aside class="sidebar">
-      <p class="sidebar-heading">MAIN MENU</p>
+        <div class="header-info">
+          <span class="status-dot"></span>
+          <span>System Online</span>
+        </div>
 
-      <nav class="navigation">
-        <a
-          routerLink="/"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
+        <button
+          type="button"
+          class="logout-button"
+          (click)="logout()"
         >
-          <span class="nav-icon">▦</span>
-          Dashboard
-        </a>
-
-        <a routerLink="/employees" routerLinkActive="active">
-          <span class="nav-icon">♙</span>
-          Employees
-        </a>
-
-        <a routerLink="/departments" routerLinkActive="active">
-          <span class="nav-icon">▤</span>
-          Departments
-        </a>
-      </nav>
-
-      <div class="sidebar-footer">
-        <p>Employee Management System</p>
-        <span>Version {{ appVersion }}</span>
+          Logout
+        </button>
       </div>
-    </aside>
+    </header>
 
-    <main class="main-content">
-      <router-outlet />
-    </main>
+    <div class="app-layout">
+      <aside class="sidebar">
+        <p class="sidebar-heading">MAIN MENU</p>
+
+        <nav class="navigation">
+
+          @if (canManageEmployees) {
+            <a
+              routerLink="/"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+            >
+              Dashboard
+            </a>
+
+            <a
+              routerLink="/employees/directory"
+              routerLinkActive="active"
+            >
+              Employee Directory
+            </a>
+
+            <a
+              routerLink="/departments"
+              routerLinkActive="active"
+            >
+              Departments
+            </a>
+          }
+
+          @if (currentUser?.role === 'ADMIN') {
+            <a
+              routerLink="/user-management"
+              routerLinkActive="active"
+            >
+              User Management
+            </a>
+          }
+
+          @if (!canManageEmployees) {
+            <a
+              routerLink="/employees"
+              routerLinkActive="active"
+            >
+              My Employee Dashboard
+            </a>
+          }
+
+        </nav>
+
+        <div class="sidebar-footer">
+          <p>Employee Management System</p>
+          <span>Version {{ appVersion }}</span>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <router-outlet />
+      </main>
+    </div>
   </div>
-</div>
+}
